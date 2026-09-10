@@ -45,15 +45,8 @@ class PluginEngine {
           r.post("/fs/list", { path, password, page, per_page }),
         get: (path: string, password = "") =>
           r.post("/fs/get", { path, password }),
-        mkdir: (path: string) => r.post("/fs/mkdir", { path }),
-        rename: (path: string, name: string) =>
-          r.post("/fs/rename", { path, name }),
         remove: (dir: string, names: string[]) =>
           r.post("/fs/remove", { dir, names }),
-        copy: (src_dir: string, dst_dir: string, names: string[]) =>
-          r.post("/fs/copy", { src_dir, dst_dir, names }),
-        move: (src_dir: string, dst_dir: string, names: string[]) =>
-          r.post("/fs/move", { src_dir, dst_dir, names }),
         form: (url: string, data: FormData) => r.post(url, data),
       },
 
@@ -181,35 +174,11 @@ class PluginEngine {
           r.post("/fs/list", { path, password, page, per_page }),
         get: (path: string, password = "") =>
           r.post("/fs/get", { path, password }),
-        mkdir: (path: string) => {
-          if (!hasPerm("fs:write")) {
-            throw new Error(`[Plugin ${plugin.id}] Permission denied: fs:write`)
-          }
-          return r.post("/fs/mkdir", { path })
-        },
-        rename: (path: string, name: string) => {
-          if (!hasPerm("fs:write")) {
-            throw new Error(`[Plugin ${plugin.id}] Permission denied: fs:write`)
-          }
-          return r.post("/fs/rename", { path, name })
-        },
         remove: (dir: string, names: string[]) => {
           if (!hasPerm("fs:write")) {
             throw new Error(`[Plugin ${plugin.id}] Permission denied: fs:write`)
           }
           return r.post("/fs/remove", { dir, names })
-        },
-        copy: (src_dir: string, dst_dir: string, names: string[]) => {
-          if (!hasPerm("fs:write")) {
-            throw new Error(`[Plugin ${plugin.id}] Permission denied: fs:write`)
-          }
-          return r.post("/fs/copy", { src_dir, dst_dir, names })
-        },
-        move: (src_dir: string, dst_dir: string, names: string[]) => {
-          if (!hasPerm("fs:write")) {
-            throw new Error(`[Plugin ${plugin.id}] Permission denied: fs:write`)
-          }
-          return r.post("/fs/move", { src_dir, dst_dir, names })
         },
         form: (url: string, data: FormData) => {
           if (!hasPerm("fs:write")) {

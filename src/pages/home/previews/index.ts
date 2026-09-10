@@ -1,6 +1,6 @@
 import { Component, lazy } from "solid-js"
-import { getIframePreviews, me, getSettingBool, isArchive } from "~/store"
-import { Obj, ObjType, UserMethods, UserPermissions, ArchiveObj } from "~/types"
+import { getIframePreviews, getSettingBool } from "~/store"
+import { Obj, ObjType } from "~/types"
 import { ext } from "~/utils"
 import { generateIframePreview } from "./iframe"
 import { useRouter, useT } from "~/hooks"
@@ -34,7 +34,6 @@ export interface Preview {
   provider?: RegExp
   component: Component
   prior: Prior
-  availableInArchive?: boolean
 }
 
 export interface PreviewComponent {
@@ -87,7 +86,6 @@ const previews: Preview[] = [
     exts: ["url"],
     component: lazy(() => import("./text-editor")),
     prior: true,
-    availableInArchive: false,
   },
   {
     key: "image",
@@ -161,37 +159,6 @@ const previews: Preview[] = [
     component: lazy(() => import("./video360")),
     prior: true,
   },
-  {
-    key: "torrent",
-    exts: ["torrent"],
-    component: lazy(() => import("./torrent")),
-    prior: true,
-  },
-  {
-    key: "archive",
-    exts: (name: string) => {
-      const index = UserPermissions.findIndex(
-        (item) => item === "read_archives",
-      )
-      const { isShare } = useRouter()
-      if (!isShare() && !UserMethods.can(me(), index)) return false
-      if (isShare() && !getSettingBool("share_archive_preview")) return false
-      return isArchive(name)
-    },
-    component: lazy(() => import("./archive")),
-    prior: () => {
-      const { isShare } = useRouter()
-      return (
-        (!isShare() &&
-          getSettingBool("preview_archives_by_default") &&
-          !getSettingBool("preview_download_by_default")) ||
-        (isShare() &&
-          getSettingBool("share_preview_archives_by_default") &&
-          !getSettingBool("share_preview_download_by_default"))
-      )
-    },
-    availableInArchive: false,
-  },
 ]
 
 export const getPreviews = (
@@ -206,7 +173,6 @@ export const getPreviews = (
   const downloadPrior =
     (!isShare() && getSettingBool("preview_download_by_default")) ||
     (isShare() && getSettingBool("share_preview_download_by_default"))
-  const isInArchive = !!(file as ArchiveObj).archive
   // internal previews
   if (!isShare() || getSettingBool("share_preview")) {
     previews.forEach((preview) => {
@@ -222,10 +188,6 @@ export const getPreviews = (
           key: preview.key,
           name: t(`home.preview.names.${preview.key}`),
           component: preview.component,
-        }
-        // Skip previews that are not available in archive when file is in archive
-        if (isInArchive && preview.availableInArchive === false) {
-          return
         }
         if (!downloadPrior && isPrior(preview.prior)) {
           res.push(r)

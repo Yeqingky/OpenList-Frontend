@@ -7,7 +7,6 @@ export const FormUpload: Upload = async (
   uploadPath: string,
   file: File,
   setUpload: SetUpload,
-  asTask = false,
   overwrite = false,
   rapid = false,
 ): Promise<undefined> => {
@@ -17,7 +16,6 @@ export const FormUpload: Upload = async (
   form.append("file", file)
   let headers: { [k: string]: any } = {
     "File-Path": encodeURIComponent(uploadPath),
-    "As-Task": asTask,
     "Content-Type": "multipart/form-data",
     "Last-Modified": file.lastModified,
     Password: password(),

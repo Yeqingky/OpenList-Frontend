@@ -28,7 +28,29 @@ import {
   VscodeIconsFileTypePhotoshop2,
 } from "~/components"
 import { SiAsciinema } from "solid-icons/si"
-import { isArchive } from "~/store/archive"
+
+// Static set of archive extensions the backend used to advertise via
+// `/public/archive_extensions`. Kept locally so archive files still render
+// with the archive icon without a backend call.
+const archiveExtensions = [
+  "br",
+  "bz2",
+  "gz",
+  "lz4",
+  "lz",
+  "sz",
+  "s2",
+  "xz",
+  "zz",
+  "zst",
+  "tar",
+  "rar",
+  "7z",
+  "zip",
+]
+
+const isArchiveName = (name: string) =>
+  archiveExtensions.includes(ext(name).toLowerCase())
 
 const iconMap = {
   "dmg,ipa,plist,tipa": BsApple,
@@ -56,7 +78,7 @@ export const getIconByTypeAndName = (type: number, name: string) => {
         return icon
       }
     }
-    if (isArchive(name)) {
+    if (isArchiveName(name)) {
       return BsFileEarmarkZipFill
     }
   }

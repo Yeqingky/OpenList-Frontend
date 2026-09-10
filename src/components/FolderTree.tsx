@@ -17,7 +17,6 @@ import {
   VStack,
 } from "@hope-ui/solid"
 import { BiSolidRightArrow, BiSolidFolderOpen } from "solid-icons/bi"
-import { TbX, TbCheck } from "solid-icons/tb"
 import {
   Accessor,
   createContext,
@@ -29,7 +28,6 @@ import {
   createEffect,
   on,
   JSXElement,
-  onMount,
 } from "solid-js"
 import { useFetch, useT, useUtil } from "~/hooks"
 import { getMainColor, password } from "~/store"
@@ -37,19 +35,14 @@ import { Obj } from "~/types"
 import {
   pathBase,
   handleResp,
-  handleRespWithNotifySuccess,
   hoverColor,
   pathJoin,
   fsDirs,
   createMatcher,
-  fsMkdir,
-  validateFilename,
-  notify,
 } from "~/utils"
 
 export type FolderTreeHandler = {
   setPath: Setter<string>
-  startCreateFolder: () => void
 }
 export interface FolderTreeProps {
   onChange: (path: string) => void
@@ -61,23 +54,13 @@ export interface FolderTreeProps {
 }
 interface FolderTreeContext extends Omit<FolderTreeProps, "handle"> {
   value: Accessor<string>
-  creatingFolderPath: Accessor<string | null>
-  setCreatingFolderPath: Setter<string | null>
 }
 const context = createContext<FolderTreeContext>()
 export const FolderTree = (props: FolderTreeProps) => {
   const [path, setPath] = createSignal("/")
-  const [creatingFolderPath, setCreatingFolderPath] = createSignal<
-    string | null
-  >(null)
-
-  const startCreateFolder = () => {
-    setCreatingFolderPath(path())
-  }
 
   props.handle?.({
     setPath,
-    startCreateFolder,
   })
 
   return (
@@ -93,8 +76,6 @@ export const FolderTree = (props: FolderTreeProps) => {
           forceRoot: props.forceRoot ?? false,
           showEmptyIcon: props.showEmptyIcon ?? false,
           showHiddenFolder: props.showHiddenFolder ?? true,
-          creatingFolderPath,
-          setCreatingFolderPath,
         }}
       >
         <FolderTreeNode path="/" />
@@ -113,8 +94,6 @@ const FolderTreeNode = (props: { path: string }) => {
     autoOpen,
     showEmptyIcon,
     showHiddenFolder,
-    creatingFolderPath,
-    setCreatingFolderPath,
   } = useContext(context)!
   const emptyIconVisible = () =>
     Boolean(showEmptyIcon && children() !== undefined && !children()?.length)
@@ -147,13 +126,6 @@ const FolderTreeNode = (props: { path: string }) => {
     }
   }
   createEffect(on(value, checkIfShouldOpen))
-
-  createEffect(() => {
-    if (creatingFolderPath() === props.path) {
-      if (!isOpen()) onToggle()
-      if (!isLoaded) load()
-    }
-  })
 
   const isHiddenFolder = () =>
     isHidePath(props.path) && !isMatchedFolder(value())
@@ -212,126 +184,10 @@ const FolderTreeNode = (props: { path: string }) => {
                 <FolderTreeNode path={pathJoin(props.path, item.name)} />
               )}
             </For>
-            <Show when={creatingFolderPath() === props.path}>
-              <FolderNameInput
-                parentPath={props.path}
-                onCancel={() => setCreatingFolderPath(null)}
-                onSuccess={(fullPath) => {
-                  setCreatingFolderPath(null)
-                  onChange(fullPath)
-                  load(true)
-                }}
-              />
-            </Show>
           </VStack>
         </Show>
       </Box>
     </Show>
-  )
-}
-
-const FOCUS_DELAY_MS = 0 // allow DOM to mount before focusing
-
-const FolderNameInput = (props: {
-  parentPath: string
-  onCancel: () => void
-  onSuccess: (fullPath: string) => void
-}) => {
-  const t = useT()
-  const [folderName, setFolderName] = createSignal("")
-  const [loading, mkdir] = useFetch(fsMkdir)
-
-  const handleSubmit = async () => {
-    const name = folderName().trim()
-    if (!name || loading()) return
-
-    const validation = validateFilename(name)
-    if (!validation.valid) {
-      notify.warning(t(`global.${validation.error}`))
-      return
-    }
-
-    const fullPath = pathJoin(props.parentPath, name)
-    const resp = await mkdir(fullPath)
-    handleRespWithNotifySuccess(
-      resp,
-      () => {
-        props.onSuccess(fullPath)
-      },
-      () => {
-        props.onCancel()
-      },
-    )
-  }
-
-  let inputRef: HTMLInputElement | undefined
-
-  onMount(() => {
-    setTimeout(() => {
-      inputRef?.focus()
-      inputRef?.select()
-    }, FOCUS_DELAY_MS)
-  })
-
-  return (
-    <HStack spacing="$2" w="$full" pl="$4" alignItems="center">
-      <Icon color={getMainColor()} as={BiSolidFolderOpen} />
-      <Input
-        ref={(el) => (inputRef = el)}
-        value={folderName()}
-        onInput={(e) => setFolderName(e.currentTarget.value)}
-        placeholder={t("home.toolbar.input_dir_name")}
-        size="sm"
-        flex="1"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault()
-            handleSubmit()
-          } else if (e.key === "Escape") {
-            props.onCancel()
-          }
-        }}
-        onBlur={(e) => {
-          if (loading()) return
-          const next = e.relatedTarget as HTMLElement | null
-          if (next?.dataset.folderAction === "true") return
-          if (!folderName().trim()) {
-            props.onCancel()
-          }
-        }}
-      />
-      <Show
-        when={!loading()}
-        fallback={<Spinner size="sm" color={getMainColor()} />}
-      >
-        <Button
-          aria-label={t("global.ok")}
-          size="sm"
-          variant="ghost"
-          rounded="$md"
-          p="$1"
-          color="$success9"
-          onClick={handleSubmit}
-          tabIndex={0}
-          data-folder-action="true"
-        >
-          <Icon as={TbCheck} boxSize="$6" />
-        </Button>
-      </Show>
-      <Button
-        aria-label={t("global.cancel")}
-        size="sm"
-        variant="ghost"
-        rounded="$md"
-        p="$1"
-        color="$danger9"
-        onClick={props.onCancel}
-        tabIndex={0}
-        data-folder-action="true"
-      >
-        <Icon as={TbX} boxSize="$6" />
-      </Button>
-    </HStack>
   )
 }
 

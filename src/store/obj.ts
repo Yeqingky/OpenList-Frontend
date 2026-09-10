@@ -277,7 +277,6 @@ export const smartCountMsg = (filterType?: ObjType) => {
 }
 
 export const [uploadConfig, setUploadConfig] = createStore({
-  asTask: false,
   overwrite: false,
   rapid: true,
 })

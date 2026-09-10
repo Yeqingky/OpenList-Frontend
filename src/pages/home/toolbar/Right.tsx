@@ -3,10 +3,8 @@ import { createMemo, Show } from "solid-js"
 import { RightIcon } from "./Icon"
 import { CgMoreO } from "solid-icons/cg"
 import { TbCheckbox } from "solid-icons/tb"
-import { objStore, selectAll, State, toggleCheckbox, userCan } from "~/store"
+import { objStore, State, toggleCheckbox, userCan } from "~/store"
 import { bus } from "~/utils"
-import { operations } from "./operations"
-import { IoMagnetOutline } from "solid-icons/io"
 import { AiOutlineCloudUpload, AiOutlineSetting } from "solid-icons/ai"
 import { RiSystemRefreshLine } from "solid-icons/ri"
 import { usePath, useRouter } from "~/hooks"
@@ -76,91 +74,10 @@ export const Right = () => {
                 }}
               />
               <RightIcon
-                as={operations.new_file.icon}
-                tips="new_file"
-                onClick={() => {
-                  bus.emit("tool", "new_file")
-                }}
-              />
-              <RightIcon
-                as={operations.mkdir.icon}
-                p="$1_5"
-                tips="mkdir"
-                onClick={() => {
-                  bus.emit("tool", "mkdir")
-                }}
-              />
-            </Show>
-            <Show
-              when={
-                isFolder() && !isShare() && userCan("move") && objStore.write
-              }
-            >
-              <RightIcon
-                as={operations.recursive_move.icon}
-                tips="recursive_move"
-                onClick={() => {
-                  bus.emit("tool", "recursiveMove")
-                }}
-              />
-            </Show>
-            <Show
-              when={
-                isFolder() && !isShare() && userCan("delete") && objStore.write
-              }
-            >
-              <RightIcon
-                as={operations.remove_empty_directory.icon}
-                tips="remove_empty_directory"
-                onClick={() => {
-                  bus.emit("tool", "removeEmptyDirectory")
-                }}
-              />
-            </Show>
-            <Show
-              when={
-                isFolder() && !isShare() && userCan("rename") && objStore.write
-              }
-            >
-              <RightIcon
-                as={operations.batch_rename.icon}
-                tips="batch_rename"
-                onClick={() => {
-                  selectAll(true)
-                  bus.emit("tool", "batchRename")
-                }}
-              />
-            </Show>
-            <Show
-              when={
-                isFolder() &&
-                !isShare() &&
-                (userCan("write_content") || objStore.write_content_bypass) &&
-                objStore.write
-              }
-            >
-              <RightIcon
                 as={AiOutlineCloudUpload}
                 tips="upload"
                 onClick={() => {
                   bus.emit("tool", "upload")
-                }}
-              />
-            </Show>
-            <Show
-              when={
-                isFolder() &&
-                !isShare() &&
-                userCan("offline_download") &&
-                objStore.write
-              }
-            >
-              <RightIcon
-                as={IoMagnetOutline}
-                pl="0"
-                tips="offline_download"
-                onClick={() => {
-                  bus.emit("tool", "offline_download")
                 }}
               />
             </Show>

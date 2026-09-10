@@ -156,7 +156,7 @@ function Editor(props: { data?: string | ArrayBuffer; contentType?: string }) {
       const file = new File([value()], objStore.obj.name, {
         type: props.contentType || "text/plain",
       })
-      await StreamUpload(pathname(), file, () => {}, false, true, false)
+      await StreamUpload(pathname(), file, () => {}, true, false)
       savedVersionId = savedVersion
       setModified(
         (ed.getModel()?.getAlternativeVersionId() ?? 0) !== savedVersionId,

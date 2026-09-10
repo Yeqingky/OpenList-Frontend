@@ -12,7 +12,7 @@ import {
   Tr,
   VStack,
 } from "@hope-ui/solid"
-import { createSignal, For } from "solid-js"
+import { createSignal, For, Show } from "solid-js"
 import {
   useFetch,
   useListFetch,
@@ -27,6 +27,7 @@ import {
   UserMethods,
   PPageResp,
   PEmptyResp,
+  isHiddenPermission,
 } from "~/types"
 import { DeletePopover } from "../common/DeletePopover"
 import { Wether } from "~/components"
@@ -51,13 +52,15 @@ const Permissions = (props: { user: User }) => {
     <HStack spacing="$0_5">
       <For each={UserPermissions}>
         {(item, i) => (
-          <Tooltip label={t(`users.permissions.${item}`)}>
-            <Box
-              boxSize="$2"
-              rounded="$full"
-              bg={color(UserMethods.can(props.user, i()))}
-            ></Box>
-          </Tooltip>
+          <Show when={!isHiddenPermission(item)}>
+            <Tooltip label={t(`users.permissions.${item}`)}>
+              <Box
+                boxSize="$2"
+                rounded="$full"
+                bg={color(UserMethods.can(props.user, i()))}
+              ></Box>
+            </Tooltip>
+          </Show>
         )}
       </For>
     </HStack>

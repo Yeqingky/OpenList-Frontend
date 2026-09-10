@@ -22,7 +22,6 @@ export const ChunkedUpload: Upload = async (
   uploadPath: string,
   file: File,
   setUpload: SetUpload,
-  asTask = false,
   overwrite = false,
   rapid = false,
 ): Promise<Error | undefined> => {
@@ -82,14 +81,7 @@ export const ChunkedUpload: Upload = async (
   }
   // Storage does not support session chunked upload -> fall back to stream upload
   if (!info) {
-    return await StreamUpload(
-      uploadPath,
-      file,
-      setUpload,
-      asTask,
-      overwrite,
-      false,
-    )
+    return await StreamUpload(uploadPath, file, setUpload, overwrite, false)
   }
   // Rapid upload hit: file already exists, done
   if (info.reuse) {

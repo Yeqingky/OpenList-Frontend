@@ -54,11 +54,7 @@ export const Center = () => {
               }}
             >
               <Show when={!isShare() && objStore.write}>
-                <For
-                  each={
-                    ["rename", "move", "copy", "delete", "decompress"] as const
-                  }
-                >
+                <For each={["delete"] as const}>
                   {(name) => {
                     return userCan(name) ? (
                       <CenterIcon

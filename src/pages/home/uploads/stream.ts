@@ -7,7 +7,6 @@ export const StreamUpload: Upload = async (
   uploadPath: string,
   file: File,
   setUpload: SetUpload,
-  asTask = false,
   overwrite = false,
   rapid = false,
 ): Promise<undefined> => {
@@ -15,7 +14,6 @@ export const StreamUpload: Upload = async (
   let oldLoaded = 0
   let headers: { [k: string]: any } = {
     "File-Path": encodeURIComponent(uploadPath),
-    "As-Task": asTask,
     "Content-Type": file.type || "application/octet-stream",
     "Last-Modified": file.lastModified,
     Password: password(),

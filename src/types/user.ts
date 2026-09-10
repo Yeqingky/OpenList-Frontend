@@ -20,6 +20,8 @@ export interface User {
 export const UserPermissions = [
   "see_hides",
   "access_without_password",
+  // bit 2 is reserved by the backend (was: add offline download tasks).
+  // Keep this placeholder so every later index == permission bit stays aligned.
   "offline_download",
   "write_content",
   "rename",
@@ -35,6 +37,22 @@ export const UserPermissions = [
   "share",
   "customize_share_id",
 ] as const
+
+// Permissions whose feature no longer exists in this build (the backend is an
+// upload/download/delete middleware). The array entries above MUST stay, because
+// index == permission bit; only the management UI hides them so admins are not
+// offered toggles for capabilities that do nothing.
+export const HiddenPermissions = [
+  "offline_download",
+  "rename",
+  "move",
+  "copy",
+  "read_archives",
+  "decompress",
+] as const
+
+export const isHiddenPermission = (name: string): boolean =>
+  (HiddenPermissions as readonly string[]).includes(name)
 
 export const UserMethods = {
   is_guest: (user: User) => user.role === UserRole.GUEST,

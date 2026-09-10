@@ -127,9 +127,6 @@ const Upload = () => {
   // All upload methods are available by default
   const uploaders = getUploads()
   const [curUploader, setCurUploader] = createSignal(uploaders[0])
-  // multipart sessions are synchronous pipelines with their own progress and
-  // retry semantics; "add as task" does not apply to them
-  const asTaskUnsupported = () => curUploader()?.name === "Multipart"
   const retryFile = (path: string) => {
     const file = fileMap.get(path)
     if (!file) return
@@ -150,7 +147,6 @@ const Upload = () => {
           (key, value) => {
             setUpload(path, key, value)
           },
-          asTaskUnsupported() ? false : uploadConfig.asTask,
           uploadConfig.overwrite,
           uploadConfig.rapid,
         )
@@ -333,15 +329,6 @@ const Upload = () => {
               spacing={{ "@initial": "$2", "@md": "$4" }}
               direction={{ "@initial": "column", "@md": "row" }}
             >
-              <Checkbox
-                checked={!asTaskUnsupported() && uploadConfig.asTask}
-                disabled={asTaskUnsupported()}
-                onChange={() => {
-                  setUploadConfig({ asTask: !uploadConfig.asTask })
-                }}
-              >
-                {t("home.upload.add_as_task")}
-              </Checkbox>
               <Checkbox
                 checked={uploadConfig.overwrite}
                 onChange={() => {

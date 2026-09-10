@@ -69,7 +69,6 @@ export const MultipartUpload: Upload = async (
   uploadPath: string,
   file: File,
   setUpload: SetUpload,
-  _asTask = false, // sessions are synchronous pipelines; As-Task does not apply
   overwrite = false,
   rapid = false,
 ): Promise<Error | undefined> => {
@@ -78,7 +77,7 @@ export const MultipartUpload: Upload = async (
   const fallbackThreshold =
     Math.max(1, getSettingNumber("multipart_chunk_size", 10)) * 1024 * 1024
   if (file.size <= fallbackThreshold) {
-    return StreamUpload(uploadPath, file, setUpload, false, overwrite, rapid)
+    return StreamUpload(uploadPath, file, setUpload, overwrite, rapid)
   }
 
   const initHeaders: Record<string, string | number> = {
@@ -125,7 +124,7 @@ export const MultipartUpload: Upload = async (
   // 后端不支持分片（存储驱动无会话上传能力）时返回 data:null，
   // 回退到流式上传，保证任意存储都能上传
   if (!session) {
-    return StreamUpload(uploadPath, file, setUpload, false, overwrite, rapid)
+    return StreamUpload(uploadPath, file, setUpload, overwrite, rapid)
   }
   const uploadId = session.upload_id
   const chunkSize = session.chunk_size

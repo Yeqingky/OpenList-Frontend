@@ -23,7 +23,6 @@ export const HttpDirectUpload: Upload = async (
   uploadPath: string,
   file: File,
   setUpload: SetUpload,
-  _asTask: boolean,
   overwrite: boolean,
   _rapid: boolean,
 ) => {
