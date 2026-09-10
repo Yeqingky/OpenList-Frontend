@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@hope-ui/solid"
 import { createSignal, For, Show } from "solid-js"
-import { Lang, languages, setCurrentLang } from "~/app/i18n"
+import { Lang, initialLang, languages, setCurrentLang } from "~/app/i18n"
 // import { TbLanguageHiragana } from "solid-icons/tb";
 import { IoLanguageOutline } from "solid-icons/io"
 import { Portal } from "solid-js/web"
@@ -25,12 +25,10 @@ export const SwitchLanguage = <C extends ElementType = "button">(
     localStorage.setItem("lang", lang)
   }
 
+  // Persist the resolved default (Simplified Chinese) so the switcher reflects
+  // the language actually in use instead of re-deriving it from the browser.
   if (!localStorage.getItem("lang")) {
-    switchLang(
-      languages.find((l) => l.code === navigator.language)
-        ? navigator.language
-        : "en",
-    )
+    switchLang(initialLang)
   }
 
   return (
