@@ -20,7 +20,6 @@ import {
   Resp,
   PEmptyResp,
   PPageResp,
-  ShareInfo,
 } from "~/types"
 import { createSignal, For } from "solid-js"
 import crypto from "crypto-js"
@@ -31,7 +30,6 @@ interface Data {
   users: User[]
   storages: Storage[]
   metas: Meta[]
-  shares: ShareInfo[]
 }
 type LogType = "success" | "error" | "info"
 const LogMap = {
@@ -85,16 +83,12 @@ const BackupRestore = () => {
   const [getStoragesLoading, getStorages] = useFetch((): PPageResp<Storage> =>
     r.get("/admin/storage/list"),
   )
-  const [getSharesLoading, getShares] = useFetch((): PPageResp<ShareInfo> =>
-    r.get("/share/list"),
-  )
   const backupLoading = () => {
     return (
       getSettingsLoading() ||
       getUsersLoading() ||
       getMetasLoading() ||
-      getStoragesLoading() ||
-      getSharesLoading()
+      getStoragesLoading()
     )
   }
   function encrypt(data: any, key: string): string {
@@ -125,7 +119,6 @@ const BackupRestore = () => {
       users: [],
       storages: [],
       metas: [],
-      shares: [],
     }
     if (password() != "") allData.encrypted = encrypt("encrypted", password())
     for (const item of [
@@ -133,7 +126,6 @@ const BackupRestore = () => {
       { name: "users", fn: getUsers, page: true },
       { name: "storages", fn: getStorages, page: true },
       { name: "metas", fn: getMetas, page: true },
-      { name: "shares", fn: getShares, page: true },
     ] as const) {
       const resp = await item.fn()
       handleRespWithoutNotify(
@@ -195,11 +187,6 @@ const BackupRestore = () => {
   const [addMetaLoading, addMeta] = useFetch((meta: Meta): PEmptyResp => {
     return r.post(`/admin/meta/create`, meta)
   })
-  const [addShareLoading, addShare] = useFetch(
-    (share: ShareInfo): PEmptyResp => {
-      return r.post(`/share/create`, share)
-    },
-  )
   const [updateUserLoading, updateUser] = useFetch((user: User): PEmptyResp => {
     return r.post(`/admin/user/update`, user)
   })
@@ -211,11 +198,6 @@ const BackupRestore = () => {
   const [updateMetaLoading, updateMeta] = useFetch((meta: Meta): PEmptyResp => {
     return r.post(`/admin/meta/update`, meta)
   })
-  const [updateShareLoading, updateShare] = useFetch(
-    (share: ShareInfo): PEmptyResp => {
-      return r.post(`/share/update`, share)
-    },
-  )
   async function handleOvrData<T>(
     dataArray: T[],
     getDataFunc: { (): PResp<{ content: T[]; total: number }> },
@@ -270,11 +252,9 @@ const BackupRestore = () => {
       addUserLoading() ||
       addStorageLoading() ||
       addMetaLoading() ||
-      addShareLoading() ||
       updateUserLoading() ||
       updateStorageLoading() ||
-      updateMetaLoading() ||
-      updateShareLoading()
+      updateMetaLoading()
     )
   }
   const restore = async () => {
@@ -300,12 +280,13 @@ const BackupRestore = () => {
             appendLog(t("br.wrong_encrypt_password"), "error")
             return
           }
-        const dataArray = Object.values(data)
-        for (let i = dataArray.length - 4; i < dataArray.length; i++) {
-          const obj = dataArray[i]
-          console.log(obj)
-          for (let a = 0; a < obj.length; a++) {
-            const obj1 = obj[a]
+        // Page collections are encrypted element-wise during backup, so they
+        // must be decrypted the same way. List them explicitly instead of
+        // indexing Object.values with a magic offset, which silently breaks
+        // whenever a collection is added or removed.
+        for (const name of ["users", "storages", "metas"] as const) {
+          for (const obj1 of (data[name] ?? []) as any[]) {
+            if (!obj1 || typeof obj1 !== "object") continue
             for (const key in obj1) {
               obj1[key] = decrypt(obj1[key], password(), false, encrypted)
             }
@@ -365,14 +346,6 @@ const BackupRestore = () => {
             "path",
             "manage.sidemenu.metas",
           )
-          await handleOvrData(
-            data.shares,
-            getShares,
-            addShare,
-            updateShare,
-            "id",
-            "manage.sidemenu.shares",
-          )
         } else {
           for (const item of [
             {
@@ -395,13 +368,6 @@ const BackupRestore = () => {
               data: data.metas,
               key: "path",
               removeId: true,
-            },
-            {
-              name: "shares",
-              fn: addShare,
-              data: data.shares,
-              key: "id",
-              removeId: false,
             },
           ] as const) {
             for (const itemData of item.data || []) {

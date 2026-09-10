@@ -40,7 +40,7 @@ async function getSaveDir(rpc_url: string, rpc_secret: string) {
 export const useDownload = () => {
   const { rawLinks } = useSelectedLink()
   const t = useT()
-  const { pathname, isShare } = useRouter()
+  const { pathname } = useRouter()
   return {
     batchDownloadSelected: () => {
       const urls = rawLinks(true)
@@ -63,7 +63,6 @@ export const useDownload = () => {
                 pathJoin(pathname(), pre),
                 obj,
                 "direct",
-                isShare(),
                 true,
               ),
               name: obj.name,

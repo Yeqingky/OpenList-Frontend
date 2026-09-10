@@ -34,8 +34,6 @@ export const UserPermissions = [
   "ftp_manage",
   "read_archives",
   "decompress",
-  "share",
-  "customize_share_id",
 ] as const
 
 // Permissions whose feature no longer exists in this build (the backend is an

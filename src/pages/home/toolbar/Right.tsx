@@ -7,7 +7,7 @@ import { objStore, State, toggleCheckbox, userCan } from "~/store"
 import { bus } from "~/utils"
 import { AiOutlineCloudUpload, AiOutlineSetting } from "solid-icons/ai"
 import { RiSystemRefreshLine } from "solid-icons/ri"
-import { usePath, useRouter } from "~/hooks"
+import { usePath } from "~/hooks"
 import { Motion } from "solid-motionone"
 import { isTocVisible, setTocDisabled } from "~/components"
 import { BiSolidBookContent } from "solid-icons/bi"
@@ -21,7 +21,6 @@ export const Right = () => {
   const margin = createMemo(() => (isOpen() ? "$4" : "$5"))
   const isFolder = createMemo(() => objStore.state === State.Folder)
   const { refresh } = usePath()
-  const { isShare } = useRouter()
   return (
     <Box
       class="left-toolbar-box"
@@ -61,7 +60,6 @@ export const Right = () => {
             <Show
               when={
                 isFolder() &&
-                !isShare() &&
                 (userCan("write_content") || objStore.write_content_bypass) &&
                 objStore.write
               }

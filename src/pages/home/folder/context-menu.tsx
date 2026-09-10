@@ -44,7 +44,7 @@ export const ContextMenu = () => {
     return UserMethods.is_admin(me()) || getSettingBool("package_download")
   }
   const { rawLink } = useLink()
-  const { isShare, pushHref, to } = useRouter()
+  const { pushHref, to } = useRouter()
   const openWithPreviews = createMemo(() => {
     const objs = selectedObjs()
     if (objs.length !== 1) return []
@@ -78,7 +78,7 @@ export const ContextMenu = () => {
       <For each={["delete"] as const}>
         {(name) => (
           <Item
-            hidden={!userCan(name) || !objStore.write || isShare()}
+            hidden={!userCan(name) || !objStore.write}
             onClick={() => {
               bus.emit("tool", name)
             }}
@@ -87,14 +87,6 @@ export const ContextMenu = () => {
           </Item>
         )}
       </For>
-      <Item
-        hidden={!userCan("share") || isShare()}
-        onClick={() => {
-          bus.emit("tool", "share")
-        }}
-      >
-        <ItemContent name="share" />
-      </Item>
       <Show when={oneChecked()}>
         <Item
           onClick={({ props }) => {

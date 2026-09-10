@@ -14,7 +14,7 @@ import {
 } from "solid-icons/bs"
 import { FiLogIn } from "solid-icons/fi"
 import { SiMetabase } from "solid-icons/si"
-import { CgDatabase, CgShare } from "solid-icons/cg"
+import { CgDatabase } from "solid-icons/cg"
 import { IoHome } from "solid-icons/io"
 import { Component, lazy } from "solid-js"
 import { Group, UserRole } from "~/types"
@@ -112,13 +112,6 @@ export const side_menu_items: SideMenuItem[] = [
     to: "/@manage/plugins",
     backend: ["ts-worker"],
     component: lazy(() => import("./plugins")),
-  },
-  {
-    title: "manage.sidemenu.shares",
-    icon: CgShare,
-    to: "/@manage/shares",
-    role: UserRole.GENERAL,
-    component: lazy(() => import("./shares/Shares")),
   },
   {
     title: "manage.sidemenu.metas",

@@ -1,6 +1,5 @@
 import { IconTypes } from "solid-icons"
 import { TiDeleteOutline } from "solid-icons/ti"
-import { CgShare } from "solid-icons/cg"
 import { TbLink } from "solid-icons/tb"
 import { AiTwotoneDelete } from "solid-icons/ai"
 import { AiOutlineCloudDownload } from "solid-icons/ai"
@@ -19,5 +18,4 @@ export const operations: Operations = {
   copy_link: { icon: TbLink, color: "$info9" },
   cancel_select: { icon: TiDeleteOutline },
   download: { icon: AiOutlineCloudDownload, color: "$primary9" },
-  share: { icon: CgShare, color: "$primary9" },
 }

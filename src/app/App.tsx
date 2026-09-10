@@ -21,7 +21,7 @@ import {
   initPluginEngine,
   r,
 } from "~/utils"
-import { MustUser, UserOrGuest } from "./MustUser"
+import { MustUser } from "./MustUser"
 import "./index.css"
 import { globalStyles } from "./theme"
 
@@ -105,14 +105,6 @@ const App: Component = () => {
                 <MustUser>
                   <Manage />
                 </MustUser>
-              }
-            />
-            <Route
-              path={["/@s/*", "/%40s/*"]}
-              element={
-                <UserOrGuest>
-                  <Home />
-                </UserOrGuest>
               }
             />
             <Route

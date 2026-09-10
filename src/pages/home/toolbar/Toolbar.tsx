@@ -7,7 +7,6 @@ import { lazy } from "solid-js"
 import { ModalWrapper } from "./ModalWrapper"
 import { LocalSettings } from "./LocalSettings"
 import { BackTop } from "./BackTop"
-import { Share } from "./Share"
 
 const Upload = lazy(() => import("../uploads/Upload"))
 
@@ -15,7 +14,6 @@ export const Modal = () => {
   return (
     <>
       <Delete />
-      <Share />
       <PackageDownloadModal />
       <ModalWrapper name="upload" title="home.toolbar.upload">
         <Upload />

@@ -13,9 +13,7 @@
     "ftp_read": "FTP read",
     "ftp_manage": "FTP manage",
     "read_archives": "Read archives",
-    "decompress": "Decompress",
-    "share": "Share",
-    "customize_share_id": "Customize share ID"
+    "decompress": "Decompress"
   },
   "username": "Username",
   "password": "Password",

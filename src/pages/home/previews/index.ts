@@ -164,39 +164,35 @@ const previews: Preview[] = [
 export const getPreviews = (
   file: Obj & { provider: string },
 ): PreviewComponent[] => {
-  const { searchParams, isShare } = useRouter()
+  const { searchParams } = useRouter()
   const t = useT()
   const typeOverride =
     ObjType[searchParams["type"]?.toUpperCase() as keyof typeof ObjType]
   const res: PreviewComponent[] = []
   const subsequent: PreviewComponent[] = []
-  const downloadPrior =
-    (!isShare() && getSettingBool("preview_download_by_default")) ||
-    (isShare() && getSettingBool("share_preview_download_by_default"))
+  const downloadPrior = getSettingBool("preview_download_by_default")
   // internal previews
-  if (!isShare() || getSettingBool("share_preview")) {
-    previews.forEach((preview) => {
-      if (preview.provider && !preview.provider.test(file.provider)) {
-        return
+  previews.forEach((preview) => {
+    if (preview.provider && !preview.provider.test(file.provider)) {
+      return
+    }
+    if (
+      preview.type === file.type ||
+      (typeOverride && preview.type === typeOverride) ||
+      extsContains(preview.exts, file.name)
+    ) {
+      const r = {
+        key: preview.key,
+        name: t(`home.preview.names.${preview.key}`),
+        component: preview.component,
       }
-      if (
-        preview.type === file.type ||
-        (typeOverride && preview.type === typeOverride) ||
-        extsContains(preview.exts, file.name)
-      ) {
-        const r = {
-          key: preview.key,
-          name: t(`home.preview.names.${preview.key}`),
-          component: preview.component,
-        }
-        if (!downloadPrior && isPrior(preview.prior)) {
-          res.push(r)
-        } else {
-          subsequent.push(r)
-        }
+      if (!downloadPrior && isPrior(preview.prior)) {
+        res.push(r)
+      } else {
+        subsequent.push(r)
       }
-    })
-  }
+    }
+  })
   // iframe previews
   const iframePreviews = getIframePreviews(file.name)
   const matchedIframePreviews = iframePreviews.map((preview) => ({
@@ -234,20 +230,16 @@ export const getPreviews = (
     // Case 2: No other previews found for a small file.
     // Add "Download" first, then suggest default text previews.
     res.push(downloadComponent)
-    if (!isShare() || getSettingBool("share_preview")) {
-      const textPreviewsToAdd = previews
-        .filter((p) =>
-          ["markdown", "markdown_with_word_wrap", "text_editor"].includes(
-            p.key,
-          ),
-        )
-        .map((p) => ({
-          key: p.key,
-          name: t(`home.preview.names.${p.key}`),
-          component: p.component,
-        }))
-      res.push(...textPreviewsToAdd)
-    }
+    const textPreviewsToAdd = previews
+      .filter((p) =>
+        ["markdown", "markdown_with_word_wrap", "text_editor"].includes(p.key),
+      )
+      .map((p) => ({
+        key: p.key,
+        name: t(`home.preview.names.${p.key}`),
+        component: p.component,
+      }))
+    res.push(...textPreviewsToAdd)
   } else {
     // Case 3: The "normal" case for all other files (images, videos, small text files, etc.).
     // Add "Download" as the last fallback option in the high-priority list.

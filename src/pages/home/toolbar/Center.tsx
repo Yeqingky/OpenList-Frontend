@@ -13,7 +13,6 @@ import { CenterIcon } from "./Icon"
 import { bus } from "~/utils"
 import { Download } from "./Download"
 import { Motion, Presence } from "solid-motionone"
-import { useRouter } from "~/hooks"
 
 export const Center = () => {
   const show = createMemo(
@@ -22,7 +21,6 @@ export const Center = () => {
       checkboxOpen() &&
       haveSelected(),
   )
-  const { isShare } = useRouter()
   return (
     <Presence exitBeforeEnter>
       <Show when={show()}>
@@ -53,7 +51,7 @@ export const Center = () => {
                 backdropFilter: "blur(8px)",
               }}
             >
-              <Show when={!isShare() && objStore.write}>
+              <Show when={objStore.write}>
                 <For each={["delete"] as const}>
                   {(name) => {
                     return userCan(name) ? (
@@ -66,14 +64,6 @@ export const Center = () => {
                     ) : null
                   }}
                 </For>
-              </Show>
-              <Show when={userCan("share") && !isShare()}>
-                <CenterIcon
-                  name="share"
-                  onClick={() => {
-                    bus.emit("tool", "share")
-                  }}
-                />
               </Show>
               <CopyLink />
               <Download />

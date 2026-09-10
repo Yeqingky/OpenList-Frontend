@@ -11,7 +11,6 @@ import metas from "./metas.json"
 import plugins from "./plugins.json"
 import settings_other from "./settings_other.json"
 import settings from "./settings.json"
-import shares from "./shares.json"
 import storages from "./storages.json"
 import users from "./users.json"
 
@@ -29,7 +28,6 @@ export const dict = {
   plugins,
   settings_other,
   settings,
-  shares,
   storages,
   users,
 }

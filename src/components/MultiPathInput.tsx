@@ -55,7 +55,9 @@ export const MultiPathInput = (props: MultiPathInputProps) => {
           value={props.value}
           invalid={!props.valid}
           readOnly={props.readOnly}
-          placeholder={props.placeholder || t("shares.files_placeholder")}
+          placeholder={
+            props.placeholder || t("storages.common.files_placeholder")
+          }
           onInput={(e) => props.onChange(e.currentTarget.value)}
         />
         <IconButton
@@ -89,7 +91,7 @@ export const MultiPathInput = (props: MultiPathInputProps) => {
               colorScheme="primary"
               leftIcon={<TbPlus />}
             >
-              {t("shares.add_path")}
+              {t("storages.common.add_path")}
             </Button>
           </ModalFooter>
         </ModalContent>
