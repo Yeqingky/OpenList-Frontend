@@ -49,6 +49,8 @@ export const HiddenPermissions = [
   "copy",
   "read_archives",
   "decompress",
+  "ftp_read",
+  "ftp_manage",
 ] as const
 
 export const isHiddenPermission = (name: string): boolean =>

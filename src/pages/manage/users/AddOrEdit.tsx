@@ -22,7 +22,6 @@ import {
 import { createStore } from "solid-js/store"
 import { For, Show } from "solid-js"
 import { Me, me, setMe } from "~/store"
-import { PublicKeys } from "./PublicKeys"
 
 const Permission = (props: {
   can: boolean
@@ -184,9 +183,6 @@ const AddOrEdit = () => {
         >
           {t(`global.${id ? "save" : "add"}`)}
         </Button>
-        <Show when={id && !UserMethods.is_guest(user)}>
-          <PublicKeys isMine={false} userId={parseInt(id)} />
-        </Show>
       </VStack>
     </MaybeLoading>
   )

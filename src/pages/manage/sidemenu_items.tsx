@@ -10,8 +10,6 @@ import {
   BsFingerprint,
   BsFront,
   BsSearch,
-  BsBucket,
-  BsHddNetwork,
   BsArrowLeftRight,
 } from "solid-icons/bs"
 import { FiLogIn } from "solid-icons/fi"
@@ -81,19 +79,6 @@ export const side_menu_items: SideMenuItem[] = [
         icon: FiLogIn,
         to: "/@manage/settings/ldap",
         component: () => <CommonSettings group={Group.LDAP} />,
-      },
-      {
-        title: "manage.sidemenu.s3",
-        icon: BsBucket,
-        to: "/@manage/settings/s3",
-        backend: ["go"],
-        component: lazy(() => import("./settings/S3")),
-      },
-      {
-        title: "manage.sidemenu.ftp",
-        icon: BsHddNetwork,
-        to: "/@manage/settings/ftp",
-        component: () => <CommonSettings group={Group.FTP} />,
       },
       {
         title: "manage.sidemenu.traffic",

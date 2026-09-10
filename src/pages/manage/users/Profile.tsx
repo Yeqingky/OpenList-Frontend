@@ -28,7 +28,6 @@ import {
 } from "~/types"
 import { handleResp, handleRespWithoutNotify, notify, r } from "~/utils"
 import { WebauthnItem } from "./Webauthnitems"
-import { PublicKeys } from "./PublicKeys"
 
 const supported = () =>
   !!globalThis.PublicKeyCredential?.parseCreationOptionsFromJSON
@@ -315,14 +314,6 @@ const Profile = () => {
           )}
         </For>
       </HStack>
-      <Show
-        when={UserMethods.can(
-          me(),
-          UserPermissions.findIndex((p) => p === "ftp_read"),
-        )}
-      >
-        <PublicKeys isMine={true} userId={me().id} />
-      </Show>
     </VStack>
   )
 }

@@ -19,8 +19,6 @@
     "sso": "Single Sign-On",
     "docs": "Documentation",
     "ldap": "LDAP",
-    "s3": "S3",
-    "ftp": "FTP",
     "traffic": "Traffic",
     "plugins": "Plugins"
   },
