@@ -51,5 +51,7 @@
   "token": "Token",
   "copy_token": "Copy Token",
   "reset_token": "Reset Token",
-  "reset_token_success": "Reset Token Successfully"
+  "reset_token_success": "Reset Token Successfully",
+  "show_token": "Show token",
+  "hide_token": "Hide token"
 }

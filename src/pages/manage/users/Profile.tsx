@@ -4,12 +4,14 @@ import {
   AlertIcon,
   AlertTitle,
   Badge,
+  Box,
   Button,
   FormControl,
   FormHelperText,
   FormLabel,
   Heading,
   HStack,
+  IconButton,
   Input,
   SimpleGrid,
   VStack,
@@ -29,6 +31,7 @@ import {
   isHiddenPermission,
 } from "~/types"
 import { handleResp, handleRespWithoutNotify, notify, r } from "~/utils"
+import { FiEye, FiEyeOff } from "solid-icons/fi"
 import { WebauthnItem } from "./Webauthnitems"
 
 const supported = () =>
@@ -54,6 +57,9 @@ const Profile = () => {
   // user would get a permission error from the admin settings endpoint.
   const isAdmin = UserMethods.is_admin(me())
   const [token, setToken] = createSignal("")
+  // The token starts hidden, mirroring the password fields, and the eye button
+  // only reveals it visually; copying always uses the real value.
+  const [tokenVisible, setTokenVisible] = createSignal(false)
   const { copy } = useUtil()
   const [tokenLoading, getSettings] = useFetch((): PResp<SettingItem[]> =>
     r.get(`/admin/setting/list?groups=${Group.SINGLE}`),
@@ -195,7 +201,12 @@ const Profile = () => {
             />
           </FormControl>
         </SimpleGrid>
-        <SimpleGrid gap="$2" columns={{ "@initial": 1, "@md": 2 }}>
+        <SimpleGrid
+          gap="$2"
+          w="$full"
+          maxW="780px"
+          columns={{ "@initial": 1, "@md": 2 }}
+        >
           <FormControl>
             <FormLabel for="password">{t("users.change_password")}</FormLabel>
             <Input
@@ -338,9 +349,35 @@ const Profile = () => {
       </HStack>
       <Show when={isAdmin}>
         <Heading>{t("users.token")}</Heading>
-        <MaybeLoading loading={tokenLoading()}>
-          <Input value={token()} readOnly />
-        </MaybeLoading>
+        <FormControl w="$full" maxW="780px">
+          <Box position="relative" w="$full">
+            <MaybeLoading loading={tokenLoading()}>
+              <Input
+                value={token()}
+                readOnly
+                type={tokenVisible() ? "text" : "password"}
+                pr="$10"
+              />
+            </MaybeLoading>
+            <IconButton
+              aria-label={t(
+                tokenVisible() ? "users.hide_token" : "users.show_token",
+              )}
+              title={t(
+                tokenVisible() ? "users.hide_token" : "users.show_token",
+              )}
+              size="sm"
+              variant="ghost"
+              colorScheme="neutral"
+              position="absolute"
+              right="$1"
+              top="50%"
+              transform="translateY(-50%)"
+              icon={tokenVisible() ? <FiEyeOff /> : <FiEye />}
+              onClick={() => setTokenVisible((v) => !v)}
+            />
+          </Box>
+        </FormControl>
         <HStack spacing="$2">
           <Button
             onClick={() => {
