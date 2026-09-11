@@ -162,14 +162,7 @@ const Storages = () => {
               <Thead>
                 <Tr>
                   <For
-                    each={[
-                      "mount_path",
-                      "driver",
-                      "order",
-                      "usage",
-                      "status",
-                      "remark",
-                    ]}
+                    each={["mount_path", "driver", "order", "status", "remark"]}
                   >
                     {(title) => <Th>{t(`storages.common.${title}`)}</Th>}
                   </For>

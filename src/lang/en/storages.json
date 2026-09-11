@@ -12,7 +12,6 @@
     "driver": "Driver",
     "order": "Order",
     "order-tips": "Used for sorting",
-    "usage": "Usage",
     "status": "Status",
     "remark": "Remark",
     "cache_expiration": "Cache Expiration",

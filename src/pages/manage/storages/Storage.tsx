@@ -8,24 +8,11 @@ import {
   Tr,
   useColorModeValue,
   VStack,
-  Progress,
-  ProgressIndicator,
-  ProgressLabel,
 } from "@hope-ui/solid"
-import { Show } from "solid-js"
 import { useFetch, useRouter, useT } from "~/hooks"
 import { getMainColor } from "~/store"
-import { MountDetails, PEmptyResp, Storage } from "~/types"
-import {
-  handleResp,
-  handleRespWithNotifySuccess,
-  notify,
-  r,
-  showDiskUsage,
-  usedPercentage,
-  toReadableUsage,
-  nearlyFull,
-} from "~/utils"
+import { PEmptyResp, Storage } from "~/types"
+import { handleResp, handleRespWithNotifySuccess, notify, r } from "~/utils"
 import { DeletePopover } from "../common/DeletePopover"
 
 interface StorageProps {
@@ -82,28 +69,6 @@ function StorageOp(props: StorageProps) {
   )
 }
 
-function StorageUsage(props: { details: MountDetails | undefined }) {
-  return (
-    <Show when={props.details}>
-      <Progress
-        class="disk-usage-percentage"
-        trackColor="$info3"
-        rounded="$full"
-        size="md"
-        value={usedPercentage(props.details!)}
-      >
-        <ProgressIndicator
-          color={nearlyFull(props.details!) ? "$danger6" : "$info6"}
-          rounded="$md"
-        />
-        <ProgressLabel class="disk-usage-text">
-          {toReadableUsage(props.details!)}
-        </ProgressLabel>
-      </Progress>
-    </Show>
-  )
-}
-
 export function StorageGridItem(props: StorageProps) {
   const t = useT()
   return (
@@ -131,15 +96,6 @@ export function StorageGridItem(props: StorageProps) {
         <Badge colorScheme="info">
           {t(`drivers.drivers.${props.storage.driver}`)}
         </Badge>
-        <Show when={props.storage.mount_details}>
-          <Badge
-            colorScheme={
-              nearlyFull(props.storage.mount_details!) ? "danger" : "success"
-            }
-          >
-            {toReadableUsage(props.storage.mount_details!)}
-          </Badge>
-        </Show>
       </HStack>
       <HStack>
         <Text>{t("storages.common.status")}:&nbsp;</Text>
@@ -168,9 +124,6 @@ export function StorageListItem(props: StorageProps) {
       <Td>{props.storage.mount_path}</Td>
       <Td>{t(`drivers.drivers.${props.storage.driver}`)}</Td>
       <Td>{props.storage.order}</Td>
-      <Td>
-        <StorageUsage details={props.storage.mount_details} />
-      </Td>
       <Td>
         {t(
           `storages.table_fields.status.${props.storage.status}`,

@@ -1,5 +1,3 @@
-import { MountDetails } from "./obj"
-
 export enum OrderBy {
   Name = "name",
   Size = "size",
@@ -40,7 +38,6 @@ export interface Storage {
   web_proxy: boolean
   webdav_policy: WebdavPolicy
   disabled: boolean
-  mount_details?: MountDetails
 }
 
 export type Addition = Record<string, string | boolean | number>

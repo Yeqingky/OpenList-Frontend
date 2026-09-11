@@ -17,16 +17,8 @@ export interface Obj {
   sign?: string
   thumb: string
   type: ObjType
-  mount_details?: MountDetails
 }
 
 export type StoreObj = Obj & {
   selected?: boolean
-}
-
-export type MountDetails = {
-  total_space?: number
-  free_space?: number
-  used_space?: number
-  driver_name: string
 }
