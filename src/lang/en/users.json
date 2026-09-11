@@ -1,19 +1,9 @@
 {
   "permissions": {
-    "see_hides": "Can see hiddens",
-    "access_without_password": "Access without password",
-    "offline_download": "Add offline download tasks",
     "write_content": "Write content (Create / Upload / Modify)",
-    "rename": "Rename",
-    "move": "Move",
-    "copy": "Copy",
     "delete": "Delete",
     "webdav_read": "WebDAV read",
-    "webdav_manage": "WebDAV manage",
-    "ftp_read": "FTP read",
-    "ftp_manage": "FTP manage",
-    "read_archives": "Read archives",
-    "decompress": "Decompress"
+    "webdav_manage": "WebDAV manage"
   },
   "username": "Username",
   "password": "Password",

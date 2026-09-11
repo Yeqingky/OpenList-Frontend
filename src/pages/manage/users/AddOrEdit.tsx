@@ -11,14 +11,7 @@ import {
 import { MaybeLoading, FolderChooseInput } from "~/components"
 import { useFetch, useRouter, useT } from "~/hooks"
 import { handleResp, notify, r } from "~/utils"
-import {
-  PEmptyResp,
-  PResp,
-  User,
-  UserMethods,
-  UserPermissions,
-  isHiddenPermission,
-} from "~/types"
+import { PEmptyResp, PResp, User, UserMethods, UserPermissions } from "~/types"
 import { createStore } from "solid-js/store"
 import { For, Show } from "solid-js"
 import { Me, me, setMe } from "~/store"
@@ -123,19 +116,17 @@ const AddOrEdit = () => {
           <Flex w="$full" wrap="wrap" gap="$2">
             <For each={UserPermissions}>
               {(item, i) => (
-                <Show when={!isHiddenPermission(item)}>
-                  <Permission
-                    name={item}
-                    can={UserMethods.can(user, i())}
-                    onChange={(val) => {
-                      if (val) {
-                        setUser("permission", (user.permission |= 1 << i()))
-                      } else {
-                        setUser("permission", (user.permission &= ~(1 << i())))
-                      }
-                    }}
-                  />
-                </Show>
+                <Permission
+                  name={item}
+                  can={UserMethods.can(user, i())}
+                  onChange={(val) => {
+                    if (val) {
+                      setUser("permission", (user.permission |= 1 << i()))
+                    } else {
+                      setUser("permission", (user.permission &= ~(1 << i())))
+                    }
+                  }}
+                />
               )}
             </For>
           </Flex>

@@ -28,7 +28,6 @@ import {
   UserMethods,
   UserPermissions,
   PResp,
-  isHiddenPermission,
 } from "~/types"
 import { handleResp, handleRespWithoutNotify, notify, r } from "~/utils"
 import { FiEye, FiEyeOff } from "solid-icons/fi"
@@ -280,11 +279,9 @@ const Profile = () => {
       <HStack wrap="wrap" gap="$2" mt="$2">
         <For each={UserPermissions}>
           {(item, i) => (
-            <Show when={!isHiddenPermission(item)}>
-              <PermissionBadge can={UserMethods.can(me(), i())}>
-                {t(`users.permissions.${item}`)}
-              </PermissionBadge>
-            </Show>
+            <PermissionBadge can={UserMethods.can(me(), i())}>
+              {t(`users.permissions.${item}`)}
+            </PermissionBadge>
           )}
         </For>
       </HStack>
