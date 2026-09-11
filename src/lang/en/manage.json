@@ -6,7 +6,6 @@
     "style": "Style",
     "preview": "Preview",
     "global": "Global",
-    "other": "Other",
     "users": "Users",
     "storages": "Storages",
     "profile": "Profile",
@@ -17,7 +16,6 @@
     "plugins": "Plugins"
   },
   "title": "OpenList Management",
-  "not_admin": "You are not an admin user, please login with an admin account.",
   "logout_success": "Logout successful",
   "send": "Send",
   "receive": "Receive",

@@ -194,11 +194,7 @@
   },
   "fetching_settings_failed": "Failed fetching settings: ",
   "get_current_user_failed": "Failed get current user: ",
-  "Loading storage, please wait": "Loading storage, please wait",
   "conflict_policy": {
-    "cancel_if_exists": "Cancel if file exists",
-    "overwrite_existing": "Overwrite existing files",
-    "skip_existing": "Skip existing files",
-    "merge": "Only Copy new files and subdirectories"
+    "overwrite_existing": "Overwrite existing files"
   }
 }
