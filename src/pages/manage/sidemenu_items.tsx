@@ -18,11 +18,7 @@ import { CgDatabase } from "solid-icons/cg"
 import { IoHome } from "solid-icons/io"
 import { Component, lazy } from "solid-js"
 import { Group, UserRole } from "~/types"
-import {
-  FaSolidBook,
-  FaSolidDatabase,
-  FaSolidPuzzlePiece,
-} from "solid-icons/fa"
+import { FaSolidBook, FaSolidPuzzlePiece } from "solid-icons/fa"
 
 export type SideMenuItem = SideMenuItemProps & {
   component?: Component
@@ -124,12 +120,6 @@ export const side_menu_items: SideMenuItem[] = [
     icon: BsSearch,
     to: "/@manage/indexes",
     component: lazy(() => import("./indexes/index_page")),
-  },
-  {
-    title: "manage.sidemenu.backup-restore",
-    to: "/@manage/backup-restore",
-    icon: FaSolidDatabase,
-    component: lazy(() => import("./backup-restore")),
   },
   {
     title: "manage.sidemenu.about",
