@@ -14,7 +14,6 @@
     "indexes": "Indexes",
     "sso": "Single Sign-On",
     "ldap": "LDAP",
-    "traffic": "Traffic",
     "plugins": "Plugins"
   },
   "title": "OpenList Management",

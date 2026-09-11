@@ -1,4 +1,4 @@
-import { getSettingBool, objStore } from "~/store"
+import { objStore } from "~/store"
 import { FormUpload } from "./form"
 import { StreamUpload } from "./stream"
 import { HttpDirectUpload } from "./direct"
@@ -20,7 +20,8 @@ const AllUploads: Uploader[] = [
   {
     name: "Multipart",
     upload: MultipartUpload,
-    available: () => getSettingBool("multipart_enabled"),
+    // multipart upload is always enabled now that its setting is gone
+    available: () => true,
   },
   {
     name: "HTTP Direct",

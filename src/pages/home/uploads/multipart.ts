@@ -1,4 +1,4 @@
-import { getSettingNumber, password } from "~/store"
+import { password } from "~/store"
 import { Resp } from "~/types"
 import { r } from "~/utils"
 import { SetUpload, Upload } from "./types"
@@ -32,6 +32,10 @@ type InitResp = Resp<MultipartSnapshot & { resumed: boolean }>
 
 // concurrent chunk requests; the server-side window holds 8 chunks, so 3
 // in-flight ascending uploads virtually never hit flow control
+// chunk size used when a client does not request a smaller one; it used to be
+// a configurable setting
+const CHUNK_SIZE_MB = 10
+
 const INFLIGHT = 3
 // flow control (429 / server window full) is not failure: the server already
 // parks each chunk request for up to ~10s waiting for a slot, so retries here
@@ -74,8 +78,7 @@ export const MultipartUpload: Upload = async (
 ): Promise<Error | undefined> => {
   // a single-chunk multipart upload costs 3 requests where Stream costs 1,
   // and small files pass CDN body limits anyway — silently fall back
-  const fallbackThreshold =
-    Math.max(1, getSettingNumber("multipart_chunk_size", 10)) * 1024 * 1024
+  const fallbackThreshold = CHUNK_SIZE_MB * 1024 * 1024
   if (file.size <= fallbackThreshold) {
     return StreamUpload(uploadPath, file, setUpload, overwrite, rapid)
   }

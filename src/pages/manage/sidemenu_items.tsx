@@ -6,10 +6,8 @@ import {
   BsWindow,
   BsPersonCircle,
   BsJoystick,
-  BsMedium,
   BsFingerprint,
   BsSearch,
-  BsArrowLeftRight,
 } from "solid-icons/bs"
 import { FiLogIn } from "solid-icons/fi"
 import { CgDatabase } from "solid-icons/cg"
@@ -73,18 +71,6 @@ export const side_menu_items: SideMenuItem[] = [
         icon: FiLogIn,
         to: "/@manage/settings/ldap",
         component: () => <CommonSettings group={Group.LDAP} />,
-      },
-      {
-        title: "manage.sidemenu.traffic",
-        icon: BsArrowLeftRight,
-        to: "/@manage/settings/traffic",
-        component: () => <CommonSettings group={Group.TRAFFIC} />,
-      },
-      {
-        title: "manage.sidemenu.other",
-        icon: BsMedium,
-        to: "/@manage/settings/other",
-        component: lazy(() => import("./settings/Other")),
       },
     ],
   },

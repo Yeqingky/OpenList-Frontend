@@ -47,5 +47,9 @@
   "webauthn": "WebAuthn",
   "add_webauthn": "Add a WebAuthn credential",
   "add_webauthn_success": "WebAuthn credential successfully added!",
-  "webauthn_not_supported": "WebAuthn is not supported in your browser or you are in an unsafe origin"
+  "webauthn_not_supported": "WebAuthn is not supported in your browser or you are in an unsafe origin",
+  "token": "Token",
+  "copy_token": "Copy Token",
+  "reset_token": "Reset Token",
+  "reset_token_success": "Reset Token Successfully"
 }

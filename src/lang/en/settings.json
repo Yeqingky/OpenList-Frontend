@@ -45,15 +45,8 @@
   "link_expiration": "Link expiration",
   "logo": "Logo",
   "main_color": "Main color",
-  "max_client_download_speed": "Max client download speed",
-  "max_client_upload_speed": "Max client upload speed",
   "max_index_depth": "Max index depth",
   "max_index_depth-tips": "max depth of index",
-  "max_server_download_speed": "Max server download speed",
-  "max_server_upload_speed": "Max server upload speed",
-  "multipart_chunk_size": "Multipart upload chunk size (MB)",
-  "multipart_chunk_size-tips": "chunk size of multipart upload in MB (positive integer), keep it under your CDN's request body limit; each active session buffers up to 8 chunks on the server's disk",
-  "multipart_enabled": "Enable multipart upload",
   "non_efs_zip_encoding": "Alternative encoding for ZIP Files",
   "ocr_api": "Ocr api",
   "package_download": "Package download",
@@ -109,9 +102,9 @@
   "sso_oidc_username_key": "SSO oidc username key",
   "sso_organization_name": "SSO organization name",
   "text_types": "Text types",
-  "token": "Token",
   "version": "Version",
   "video_autoplay": "Video autoplay",
   "video_types": "Video types",
-  "webauthn_login_enabled": "WebAuthn login enabled"
+  "webauthn_login_enabled": "WebAuthn login enabled",
+  "unknown_type": "Unknown type"
 }

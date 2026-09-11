@@ -17,10 +17,12 @@ import {
 } from "@hope-ui/solid"
 import { createSignal, For, JSXElement, onCleanup, Show } from "solid-js"
 import { LinkWithBase, MaybeLoading } from "~/components"
-import { useFetch, useManageTitle, useRouter, useT } from "~/hooks"
+import { useFetch, useManageTitle, useRouter, useT, useUtil } from "~/hooks"
 import { setMe, me, getSettingBool } from "~/store"
 import {
+  Group,
   PEmptyResp,
+  SettingItem,
   UserMethods,
   UserPermissions,
   PResp,
@@ -48,6 +50,26 @@ const Profile = () => {
   const [password, setPassword] = createSignal("")
   const [confirmPassword, setConfirmPassword] = createSignal("")
   const usecompatibility = getSettingBool("sso_compatibility_mode")
+  // The site token is admin only, so it is fetched only for admins: a regular
+  // user would get a permission error from the admin settings endpoint.
+  const isAdmin = UserMethods.is_admin(me())
+  const [token, setToken] = createSignal("")
+  const { copy } = useUtil()
+  const [tokenLoading, getSettings] = useFetch((): PResp<SettingItem[]> =>
+    r.get(`/admin/setting/list?groups=${Group.SINGLE}`),
+  )
+  const [resetTokenLoading, resetToken] = useFetch((): PResp<string> =>
+    r.post("/admin/setting/reset_token"),
+  )
+  const loadToken = async () => {
+    const resp = await getSettings()
+    handleRespWithoutNotify(resp, (data) => {
+      setToken(data.find((i) => i.key === "token")?.value || "")
+    })
+  }
+  if (isAdmin) {
+    loadToken()
+  }
   const [loading, save] = useFetch((ssoID?: boolean): PEmptyResp =>
     r.post("/me/update", {
       username: ssoID ? me().username : username(),
@@ -314,6 +336,34 @@ const Profile = () => {
           )}
         </For>
       </HStack>
+      <Show when={isAdmin}>
+        <Heading>{t("users.token")}</Heading>
+        <MaybeLoading loading={tokenLoading()}>
+          <Input value={token()} readOnly />
+        </MaybeLoading>
+        <HStack spacing="$2">
+          <Button
+            onClick={() => {
+              copy(token())
+            }}
+          >
+            {t("users.copy_token")}
+          </Button>
+          <Button
+            colorScheme="danger"
+            loading={resetTokenLoading()}
+            onClick={async () => {
+              const resp = await resetToken()
+              handleResp(resp, (data) => {
+                notify.success(t("users.reset_token_success"))
+                setToken(data)
+              })
+            }}
+          >
+            {t("users.reset_token")}
+          </Button>
+        </HStack>
+      </Show>
     </VStack>
   )
 }
