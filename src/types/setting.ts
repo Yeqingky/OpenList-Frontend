@@ -1,18 +1,17 @@
 import { Type } from "."
 
 export enum Group {
-  SINGLE,
-  SITE,
-  STYLE,
-  PREVIEW,
-  GLOBAL,
-  ARIA2,
-  INDEX,
-  SSO,
-  LDAP,
-  // Values 9 (S3) and 10 (FTP) were dropped together with the S3 and FTP
-  // servers. TRAFFIC is numbered explicitly so the remaining groups keep the
-  // values the Go backend assigns via iota.
+  SINGLE = 0,
+  SITE = 1,
+  STYLE = 2,
+  PREVIEW = 3,
+  GLOBAL = 4,
+  // 5: reserved (was the offline download group), kept so the remaining groups
+  // keep the values the Go backend assigns via iota.
+  // 9: reserved (was S3) and 10: reserved (was FTP), removed with those servers.
+  INDEX = 6,
+  SSO = 7,
+  LDAP = 8,
   TRAFFIC = 11,
 }
 export enum Flag {
