@@ -11,9 +11,7 @@ export interface User {
   base_path: string
   role: UserRole
   permission: number
-  sso_id: string
   disabled: boolean
-  allow_ldap: boolean
   // otp: boolean;
 }
 

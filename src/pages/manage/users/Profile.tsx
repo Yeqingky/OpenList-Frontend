@@ -17,7 +17,7 @@ import {
   VStack,
   Text,
 } from "@hope-ui/solid"
-import { createSignal, For, JSXElement, onCleanup, Show } from "solid-js"
+import { createSignal, For, JSXElement, Show } from "solid-js"
 import { LinkWithBase, MaybeLoading } from "~/components"
 import { useFetch, useManageTitle, useRouter, useT, useUtil } from "~/hooks"
 import { setMe, me, getSettingBool } from "~/store"
@@ -48,11 +48,10 @@ const PermissionBadge = (props: { can: boolean; children: JSXElement }) => {
 const Profile = () => {
   const t = useT()
   useManageTitle("manage.sidemenu.profile")
-  const { searchParams, to } = useRouter()
+  const { to } = useRouter()
   const [username, setUsername] = createSignal(me().username)
   const [password, setPassword] = createSignal("")
   const [confirmPassword, setConfirmPassword] = createSignal("")
-  const usecompatibility = getSettingBool("sso_compatibility_mode")
   // The site token is admin only, so it is fetched only for admins: a regular
   // user would get a permission error from the admin settings endpoint.
   const isAdmin = UserMethods.is_admin(me())
@@ -76,11 +75,10 @@ const Profile = () => {
   if (isAdmin) {
     loadToken()
   }
-  const [loading, save] = useFetch((ssoID?: boolean): PEmptyResp =>
+  const [loading, save] = useFetch((): PEmptyResp =>
     r.post("/me/update", {
-      username: ssoID ? me().username : username(),
-      password: ssoID ? "" : password(),
-      sso_id: me().sso_id,
+      username: username(),
+      password: password(),
     }),
   )
 
@@ -112,38 +110,18 @@ const Profile = () => {
         },
       ),
   )
-  const saveMe = async (ssoID?: boolean) => {
+  const saveMe = async () => {
     if (password() && password() !== confirmPassword()) {
       notify.warning(t("users.confirm_password_not_same"))
       return
     }
-    const resp = await save(ssoID)
+    const resp = await save()
     handleResp(resp, () => {
       setMe({ ...me(), username: username() })
-      if (!ssoID) {
-        notify.success(t("users.update_profile_success"))
-        to(`/@login?redirect=${encodeURIComponent(location.pathname)}`)
-      } else {
-        to("")
-      }
+      notify.success(t("users.update_profile_success"))
+      to(`/@login?redirect=${encodeURIComponent(location.pathname)}`)
     })
   }
-  const ssoID = searchParams["sso_id"]
-  if (ssoID) {
-    setMe({ ...me(), sso_id: ssoID })
-    saveMe(true)
-  }
-  function messageEvent(event: MessageEvent) {
-    const data = event.data
-    if (data.sso_id) {
-      setMe({ ...me(), sso_id: data.sso_id })
-      saveMe(true)
-    }
-  }
-  window.addEventListener("message", messageEvent)
-  onCleanup(() => {
-    window.removeEventListener("message", messageEvent)
-  })
   const [credentials, setcredentials] = createSignal<WebauthnItem[]>([])
   const initauthnEdit = async () => {
     const resp = await getauthncredentials()
@@ -237,7 +215,7 @@ const Profile = () => {
           </FormControl>
         </SimpleGrid>
         <HStack spacing="$2">
-          <Button loading={loading()} onClick={[saveMe, false]}>
+          <Button loading={loading()} onClick={saveMe}>
             {t("global.save")}
           </Button>
           <Show when={!me().otp}>
@@ -248,43 +226,6 @@ const Profile = () => {
               }}
             >
               {t("users.enable_2fa")}
-            </Button>
-          </Show>
-        </HStack>
-      </Show>
-      <Show
-        when={
-          getSettingBool("sso_login_enabled") && !UserMethods.is_guest(me())
-        }
-      >
-        <Heading>{t("users.sso_login")}</Heading>
-        <HStack spacing="$2">
-          <Show
-            when={me().sso_id}
-            fallback={
-              <Button
-                onClick={() => {
-                  const url = r.getUri() + "/auth/sso?method=get_sso_id"
-                  if (usecompatibility) {
-                    window.location.href = url
-                    return
-                  }
-                  window.open(url, "authPopup", "width=500,height=600")
-                }}
-              >
-                {t("users.connect_sso")}
-              </Button>
-            }
-          >
-            <Button
-              colorScheme="danger"
-              loading={loading()}
-              onClick={() => {
-                setMe({ ...me(), sso_id: "" })
-                saveMe(true)
-              }}
-            >
-              {t("users.disconnect_sso")}
             </Button>
           </Show>
         </HStack>

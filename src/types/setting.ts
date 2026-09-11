@@ -8,11 +8,10 @@ export enum Group {
   GLOBAL = 4,
   // 5: reserved (was the offline download group), kept so the remaining groups
   // keep the values the Go backend assigns via iota.
+  // 7: reserved (was SSO) and 8: reserved (was LDAP), removed with those features.
   // 9: reserved (was S3) and 10: reserved (was FTP), removed with those servers.
   // 11: reserved (was TRAFFIC), removed with the traffic settings page.
   INDEX = 6,
-  SSO = 7,
-  LDAP = 8,
 }
 export enum Flag {
   PUBLIC,

@@ -11,8 +11,6 @@
     "profile": "Profile",
     "home": "Home",
     "indexes": "Indexes",
-    "sso": "Single Sign-On",
-    "ldap": "LDAP",
     "plugins": "Plugins"
   },
   "title": "OpenList Management",

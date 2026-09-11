@@ -9,7 +9,6 @@ import {
   BsFingerprint,
   BsSearch,
 } from "solid-icons/bs"
-import { FiLogIn } from "solid-icons/fi"
 import { CgDatabase } from "solid-icons/cg"
 import { IoHome } from "solid-icons/io"
 import { Component, lazy } from "solid-js"
@@ -59,18 +58,6 @@ export const side_menu_items: SideMenuItem[] = [
         icon: BsJoystick,
         to: "/@manage/settings/global",
         component: () => <CommonSettings group={Group.GLOBAL} />,
-      },
-      {
-        title: "manage.sidemenu.sso",
-        icon: FiLogIn,
-        to: "/@manage/settings/sso",
-        component: () => <CommonSettings group={Group.SSO} />,
-      },
-      {
-        title: "manage.sidemenu.ldap",
-        icon: FiLogIn,
-        to: "/@manage/settings/ldap",
-        component: () => <CommonSettings group={Group.LDAP} />,
       },
     ],
   },
