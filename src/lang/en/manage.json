@@ -9,13 +9,10 @@
     "other": "Other",
     "users": "Users",
     "storages": "Storages",
-    "metas": "Metas",
     "profile": "Profile",
-    "about": "About",
     "home": "Home",
     "indexes": "Indexes",
     "sso": "Single Sign-On",
-    "docs": "Documentation",
     "ldap": "LDAP",
     "traffic": "Traffic",
     "plugins": "Plugins"

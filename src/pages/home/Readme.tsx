@@ -5,10 +5,7 @@ import { useLink, useRouter } from "~/hooks"
 import { getSettingBool, objStore, State } from "~/store"
 import { fetchText } from "~/utils"
 
-export function Readme(props: {
-  files: string[]
-  fromMeta: keyof typeof objStore
-}) {
+export function Readme(props: { files: string[]; toc: boolean }) {
   const cardBg = useColorModeValue("white", "$neutral3")
   const { proxyLink } = useLink()
   const { pathname } = useRouter()
@@ -33,12 +30,6 @@ export function Readme(props: {
             return proxyLink(obj, true)
           }
         }
-        if (
-          objStore[props.fromMeta] &&
-          typeof objStore[props.fromMeta] === "string"
-        ) {
-          return objStore[props.fromMeta] as string
-        }
         return ""
       },
     ),
@@ -57,11 +48,7 @@ export function Readme(props: {
     <Show when={getSettingBool("readme_autorender") && readme()}>
       <Box w="$full" rounded="$xl" p="$4" bgColor={cardBg()} shadow="$lg">
         <MaybeLoading loading={content.loading}>
-          <Markdown
-            children={content()?.content}
-            readme
-            toc={props.fromMeta === "readme"}
-          />
+          <Markdown children={content()?.content} readme toc={props.toc} />
         </MaybeLoading>
       </Box>
     </Show>

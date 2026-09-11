@@ -78,7 +78,7 @@ export const ContextMenu = () => {
       <For each={["delete"] as const}>
         {(name) => (
           <Item
-            hidden={!userCan(name) || !objStore.write}
+            hidden={!userCan(name)}
             onClick={() => {
               bus.emit("tool", name)
             }}

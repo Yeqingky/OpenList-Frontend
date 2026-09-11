@@ -11,6 +11,7 @@ import { usePath } from "~/hooks"
 import { Motion } from "solid-motionone"
 import { isTocVisible, setTocDisabled } from "~/components"
 import { BiSolidBookContent } from "solid-icons/bi"
+import { operations } from "./operations"
 
 export const Right = () => {
   const { isOpen, onToggle } = createDisclosure({
@@ -57,13 +58,7 @@ export const Right = () => {
           transition={{ duration: 0.2 }}
         >
           <VStack spacing="$1" class="left-toolbar-in">
-            <Show
-              when={
-                isFolder() &&
-                (userCan("write_content") || objStore.write_content_bypass) &&
-                objStore.write
-              }
-            >
+            <Show when={isFolder() && userCan("write_content")}>
               <RightIcon
                 as={RiSystemRefreshLine}
                 tips="refresh"
@@ -76,6 +71,18 @@ export const Right = () => {
                 tips="upload"
                 onClick={() => {
                   bus.emit("tool", "upload")
+                }}
+              />
+            </Show>
+            <Show
+              when={isFolder() && userCan("write_content") && objStore.mkdir}
+            >
+              <RightIcon
+                as={operations.mkdir.icon}
+                p="$1_5"
+                tips="mkdir"
+                onClick={() => {
+                  bus.emit("tool", "mkdir")
                 }}
               />
             </Show>

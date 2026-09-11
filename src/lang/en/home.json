@@ -86,6 +86,8 @@
     "pre_package_download-tips": "Using streamsaver in the browser instead of the server for package download requires the corresponding storage to support cors, and the unsupported storage will fail.",
     "package_download-tips": "Downloading, please wait don't close the page",
     "playlist_download": "Playlist Download",
+    "mkdir": "New folder",
+    "input_dir_name": "Input directory name",
     "upload": "Upload",
     "local_settings": "Local Settings"
   },

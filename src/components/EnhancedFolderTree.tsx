@@ -12,7 +12,7 @@ import {
   createEffect,
   on,
 } from "solid-js"
-import { useFetch, useT, useUtil } from "~/hooks"
+import { useFetch, useT } from "~/hooks"
 import { getMainColor, password } from "~/store"
 import { Obj } from "~/types"
 import {
@@ -34,7 +34,6 @@ export interface EnhancedFolderTreeProps {
   autoOpen?: boolean
   handle?: (handler: EnhancedFolderTreeHandler) => void
   showEmptyIcon?: boolean
-  showHiddenFolder?: boolean
 }
 
 interface EnhancedFolderTreeContext extends Omit<
@@ -61,7 +60,6 @@ export const EnhancedFolderTree = (props: EnhancedFolderTreeProps) => {
           autoOpen: props.autoOpen ?? false,
           forceRoot: props.forceRoot ?? false,
           showEmptyIcon: props.showEmptyIcon ?? false,
-          showHiddenFolder: props.showHiddenFolder ?? true,
         }}
       >
         <EnhancedFolderTreeNode path="/" />
@@ -71,16 +69,9 @@ export const EnhancedFolderTree = (props: EnhancedFolderTreeProps) => {
 }
 
 const EnhancedFolderTreeNode = (props: { path: string }) => {
-  const { isHidePath } = useUtil()
   const [items, setItems] = createSignal<Obj[]>()
-  const {
-    value,
-    onChange,
-    forceRoot,
-    autoOpen,
-    showEmptyIcon,
-    showHiddenFolder,
-  } = useContext(context)!
+  const { value, onChange, forceRoot, autoOpen, showEmptyIcon } =
+    useContext(context)!
 
   const emptyIconVisible = () =>
     Boolean(showEmptyIcon && items() !== undefined && !items()?.length)
@@ -120,111 +111,104 @@ const EnhancedFolderTreeNode = (props: { path: string }) => {
 
   createEffect(on(value, checkIfShouldOpen))
 
-  const isHiddenFolder = () =>
-    isHidePath(props.path) && !isMatchedFolder(value())
-
   const folders = () => items()?.filter((item) => item.is_dir) || []
   const files = () => items()?.filter((item) => !item.is_dir) || []
 
   return (
-    <Show when={showHiddenFolder || !isHiddenFolder()}>
-      <Box>
-        <HStack spacing="$2">
+    <Box>
+      <HStack spacing="$2">
+        <Show
+          when={!loading()}
+          fallback={<Spinner size="sm" color={getMainColor()} />}
+        >
           <Show
-            when={!loading()}
-            fallback={<Spinner size="sm" color={getMainColor()} />}
+            when={!emptyIconVisible()}
+            fallback={<Icon color={getMainColor()} as={BiSolidFolderOpen} />}
           >
-            <Show
-              when={!emptyIconVisible()}
-              fallback={<Icon color={getMainColor()} as={BiSolidFolderOpen} />}
-            >
-              <Icon
-                color={getMainColor()}
-                as={BiSolidRightArrow}
-                transform={isOpen() ? "rotate(90deg)" : "none"}
-                transition="transform 0.2s"
-                cursor="pointer"
-                onClick={() => {
-                  onToggle()
-                  if (isOpen()) {
-                    load()
-                  }
-                }}
-              />
-            </Show>
+            <Icon
+              color={getMainColor()}
+              as={BiSolidRightArrow}
+              transform={isOpen() ? "rotate(90deg)" : "none"}
+              transition="transform 0.2s"
+              cursor="pointer"
+              onClick={() => {
+                onToggle()
+                if (isOpen()) {
+                  load()
+                }
+              }}
+            />
           </Show>
-          <Icon color={getMainColor()} as={TbFolder} cursor="pointer" />
-          <Text
-            css={{
-              whiteSpace: "nowrap",
-            }}
-            fontSize="$md"
-            cursor="pointer"
-            px="$1"
-            rounded="$md"
-            bgColor={active() ? "$info8" : "transparent"}
-            _hover={
-              {
-                bgColor: active() ? "$info8" : hoverColor(),
-              } as any
-            }
-            onClick={() => {
-              onChange(props.path)
-            }}
-          >
-            {props.path === "/" ? "root" : pathBase(props.path)}
-          </Text>
-        </HStack>
-
-        <Show when={isOpen()}>
-          <VStack mt="$1" pl="$4" alignItems="start" spacing="$1">
-            <For each={folders()}>
-              {(item) => (
-                <EnhancedFolderTreeNode
-                  path={pathJoin(props.path, item.name)}
-                />
-              )}
-            </For>
-
-            <For each={files()}>
-              {(item) => (
-                <HStack spacing="$2" w="$full">
-                  <Box w="16px" />
-                  <Icon color={getMainColor()} as={TbFile} cursor="pointer" />
-                  <Text
-                    css={{
-                      whiteSpace: "nowrap",
-                    }}
-                    fontSize="$md"
-                    cursor="pointer"
-                    px="$1"
-                    rounded="$md"
-                    bgColor={
-                      value() === pathJoin(props.path, item.name)
-                        ? "$info8"
-                        : "transparent"
-                    }
-                    _hover={
-                      {
-                        bgColor:
-                          value() === pathJoin(props.path, item.name)
-                            ? "$info8"
-                            : hoverColor(),
-                      } as any
-                    }
-                    onClick={() => {
-                      onChange(pathJoin(props.path, item.name))
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                </HStack>
-              )}
-            </For>
-          </VStack>
         </Show>
-      </Box>
-    </Show>
+        <Icon color={getMainColor()} as={TbFolder} cursor="pointer" />
+        <Text
+          css={{
+            whiteSpace: "nowrap",
+          }}
+          fontSize="$md"
+          cursor="pointer"
+          px="$1"
+          rounded="$md"
+          bgColor={active() ? "$info8" : "transparent"}
+          _hover={
+            {
+              bgColor: active() ? "$info8" : hoverColor(),
+            } as any
+          }
+          onClick={() => {
+            onChange(props.path)
+          }}
+        >
+          {props.path === "/" ? "root" : pathBase(props.path)}
+        </Text>
+      </HStack>
+
+      <Show when={isOpen()}>
+        <VStack mt="$1" pl="$4" alignItems="start" spacing="$1">
+          <For each={folders()}>
+            {(item) => (
+              <EnhancedFolderTreeNode path={pathJoin(props.path, item.name)} />
+            )}
+          </For>
+
+          <For each={files()}>
+            {(item) => (
+              <HStack spacing="$2" w="$full">
+                <Box w="16px" />
+                <Icon color={getMainColor()} as={TbFile} cursor="pointer" />
+                <Text
+                  css={{
+                    whiteSpace: "nowrap",
+                  }}
+                  fontSize="$md"
+                  cursor="pointer"
+                  px="$1"
+                  rounded="$md"
+                  bgColor={
+                    value() === pathJoin(props.path, item.name)
+                      ? "$info8"
+                      : "transparent"
+                  }
+                  _hover={
+                    {
+                      bgColor:
+                        value() === pathJoin(props.path, item.name)
+                          ? "$info8"
+                          : hoverColor(),
+                    } as any
+                  }
+                  onClick={() => {
+                    onChange(pathJoin(props.path, item.name))
+                  }}
+                >
+                  {item.name}
+                </Text>
+              </HStack>
+            )}
+          </For>
+        </VStack>
+      </Show>
+    </Box>
   )
 }
 

@@ -29,7 +29,7 @@ import {
   on,
   JSXElement,
 } from "solid-js"
-import { useFetch, useT, useUtil } from "~/hooks"
+import { useFetch, useT } from "~/hooks"
 import { getMainColor, password } from "~/store"
 import { Obj } from "~/types"
 import {
@@ -50,7 +50,6 @@ export interface FolderTreeProps {
   autoOpen?: boolean
   handle?: (handler: FolderTreeHandler) => void
   showEmptyIcon?: boolean
-  showHiddenFolder?: boolean
 }
 interface FolderTreeContext extends Omit<FolderTreeProps, "handle"> {
   value: Accessor<string>
@@ -75,7 +74,6 @@ export const FolderTree = (props: FolderTreeProps) => {
           autoOpen: props.autoOpen ?? false,
           forceRoot: props.forceRoot ?? false,
           showEmptyIcon: props.showEmptyIcon ?? false,
-          showHiddenFolder: props.showHiddenFolder ?? true,
         }}
       >
         <FolderTreeNode path="/" />
@@ -85,16 +83,9 @@ export const FolderTree = (props: FolderTreeProps) => {
 }
 
 const FolderTreeNode = (props: { path: string }) => {
-  const { isHidePath } = useUtil()
   const [children, setChildren] = createSignal<Obj[]>()
-  const {
-    value,
-    onChange,
-    forceRoot,
-    autoOpen,
-    showEmptyIcon,
-    showHiddenFolder,
-  } = useContext(context)!
+  const { value, onChange, forceRoot, autoOpen, showEmptyIcon } =
+    useContext(context)!
   const emptyIconVisible = () =>
     Boolean(showEmptyIcon && children() !== undefined && !children()?.length)
   const [loading, fetchDirs] = useFetch(() =>
@@ -127,67 +118,63 @@ const FolderTreeNode = (props: { path: string }) => {
   }
   createEffect(on(value, checkIfShouldOpen))
 
-  const isHiddenFolder = () =>
-    isHidePath(props.path) && !isMatchedFolder(value())
   return (
-    <Show when={showHiddenFolder || !isHiddenFolder()}>
-      <Box>
-        <HStack spacing="$2">
+    <Box>
+      <HStack spacing="$2">
+        <Show
+          when={!loading()}
+          fallback={<Spinner size="sm" color={getMainColor()} />}
+        >
           <Show
-            when={!loading()}
-            fallback={<Spinner size="sm" color={getMainColor()} />}
+            when={!emptyIconVisible()}
+            fallback={<Icon color={getMainColor()} as={BiSolidFolderOpen} />}
           >
-            <Show
-              when={!emptyIconVisible()}
-              fallback={<Icon color={getMainColor()} as={BiSolidFolderOpen} />}
-            >
-              <Icon
-                color={getMainColor()}
-                as={BiSolidRightArrow}
-                transform={isOpen() ? "rotate(90deg)" : "none"}
-                transition="transform 0.2s"
-                cursor="pointer"
-                onClick={() => {
-                  onToggle()
-                  if (isOpen()) {
-                    load()
-                  }
-                }}
-              />
-            </Show>
+            <Icon
+              color={getMainColor()}
+              as={BiSolidRightArrow}
+              transform={isOpen() ? "rotate(90deg)" : "none"}
+              transition="transform 0.2s"
+              cursor="pointer"
+              onClick={() => {
+                onToggle()
+                if (isOpen()) {
+                  load()
+                }
+              }}
+            />
           </Show>
-          <Text
-            css={{
-              // textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-            // overflow="hidden"
-            fontSize="$md"
-            cursor="pointer"
-            px="$1"
-            rounded="$md"
-            bgColor={active() ? "$info8" : "transparent"}
-            _hover={{
-              bgColor: active() ? "$info8" : hoverColor(),
-            }}
-            onClick={() => {
-              onChange(props.path)
-            }}
-          >
-            {props.path === "/" ? "root" : pathBase(props.path)}
-          </Text>
-        </HStack>
-        <Show when={isOpen()}>
-          <VStack mt="$1" pl="$4" alignItems="start" spacing="$1">
-            <For each={children()}>
-              {(item) => (
-                <FolderTreeNode path={pathJoin(props.path, item.name)} />
-              )}
-            </For>
-          </VStack>
         </Show>
-      </Box>
-    </Show>
+        <Text
+          css={{
+            // textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+          // overflow="hidden"
+          fontSize="$md"
+          cursor="pointer"
+          px="$1"
+          rounded="$md"
+          bgColor={active() ? "$info8" : "transparent"}
+          _hover={{
+            bgColor: active() ? "$info8" : hoverColor(),
+          }}
+          onClick={() => {
+            onChange(props.path)
+          }}
+        >
+          {props.path === "/" ? "root" : pathBase(props.path)}
+        </Text>
+      </HStack>
+      <Show when={isOpen()}>
+        <VStack mt="$1" pl="$4" alignItems="start" spacing="$1">
+          <For each={children()}>
+            {(item) => (
+              <FolderTreeNode path={pathJoin(props.path, item.name)} />
+            )}
+          </For>
+        </VStack>
+      </Show>
+    </Box>
   )
 }
 

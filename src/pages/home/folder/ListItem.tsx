@@ -10,7 +10,7 @@ import { Motion } from "solid-motionone"
 import { useContextMenu } from "solid-contextmenu"
 import { batch, Show } from "solid-js"
 import { LinkWithPush } from "~/components"
-import { usePath, useRouter, useUtil } from "~/hooks"
+import { usePath, useRouter } from "~/hooks"
 import {
   checkboxOpen,
   getMainColor,
@@ -46,10 +46,6 @@ export const cols: Col[] = [
 ]
 
 export const ListItem = (props: { obj: StoreObj; index: number }) => {
-  const { isHide } = useUtil()
-  if (isHide(props.obj)) {
-    return null
-  }
   const { setPathAs } = usePath()
   const { show } = useContextMenu({ id: 1 })
   const { pushHref, to } = useRouter()

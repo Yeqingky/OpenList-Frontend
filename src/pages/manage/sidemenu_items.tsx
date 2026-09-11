@@ -8,17 +8,15 @@ import {
   BsJoystick,
   BsMedium,
   BsFingerprint,
-  BsFront,
   BsSearch,
   BsArrowLeftRight,
 } from "solid-icons/bs"
 import { FiLogIn } from "solid-icons/fi"
-import { SiMetabase } from "solid-icons/si"
 import { CgDatabase } from "solid-icons/cg"
 import { IoHome } from "solid-icons/io"
 import { Component, lazy } from "solid-js"
 import { Group, UserRole } from "~/types"
-import { FaSolidBook, FaSolidPuzzlePiece } from "solid-icons/fa"
+import { FaSolidPuzzlePiece } from "solid-icons/fa"
 
 export type SideMenuItem = SideMenuItemProps & {
   component?: Component
@@ -110,30 +108,10 @@ export const side_menu_items: SideMenuItem[] = [
     component: lazy(() => import("./plugins")),
   },
   {
-    title: "manage.sidemenu.metas",
-    icon: SiMetabase,
-    to: "/@manage/metas",
-    component: lazy(() => import("./metas/Metas")),
-  },
-  {
     title: "manage.sidemenu.indexes",
     icon: BsSearch,
     to: "/@manage/indexes",
     component: lazy(() => import("./indexes/index_page")),
-  },
-  {
-    title: "manage.sidemenu.about",
-    icon: BsFront,
-    to: "/@manage/about",
-    role: UserRole.GUEST,
-    component: lazy(() => import("./About")),
-  },
-  {
-    title: "manage.sidemenu.docs",
-    icon: FaSolidBook,
-    to: "https://doc.oplist.org",
-    role: UserRole.GUEST,
-    external: true,
   },
   {
     title: "manage.sidemenu.home",

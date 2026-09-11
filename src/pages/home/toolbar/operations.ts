@@ -4,6 +4,7 @@ import { TbLink } from "solid-icons/tb"
 import { AiTwotoneDelete } from "solid-icons/ai"
 import { AiOutlineCloudDownload } from "solid-icons/ai"
 import { FiExternalLink } from "solid-icons/fi"
+import { CgFolderAdd } from "solid-icons/cg"
 
 export interface Operations {
   [key: string]: {
@@ -15,6 +16,7 @@ export interface Operations {
 export const operations: Operations = {
   open_with: { icon: FiExternalLink, color: "$info9" },
   delete: { icon: AiTwotoneDelete, color: "$danger9" },
+  mkdir: { icon: CgFolderAdd, p: true },
   copy_link: { icon: TbLink, color: "$info9" },
   cancel_select: { icon: TiDeleteOutline },
   download: { icon: AiOutlineCloudDownload, color: "$primary9" },

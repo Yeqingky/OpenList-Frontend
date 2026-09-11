@@ -14,12 +14,10 @@ export type PageResp<T> = Resp<{
 export type FsListResp = Resp<{
   content: Obj[]
   total: number
-  readme: string
-  header: string
-  write: boolean
-  write_content_bypass: boolean
   provider: string
   direct_upload_tools?: string[]
+  // Whether the storage driver supports creating directories.
+  mkdir: boolean
 }>
 
 export type SearchNode = {
@@ -36,8 +34,6 @@ export type FsSearchResp = PageResp<SearchNode>
 export type FsGetResp = Resp<
   Obj & {
     raw_url: string
-    readme: string
-    header: string
     provider: string
     related: Obj[]
   }

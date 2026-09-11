@@ -18,6 +18,8 @@ export interface User {
 }
 
 export const UserPermissions = [
+  // bit 0 is reserved by the backend (was: see hidden files).
+  // Keep this placeholder so every later index == permission bit stays aligned.
   "see_hides",
   "access_without_password",
   // bit 2 is reserved by the backend (was: add offline download tasks).
@@ -41,6 +43,7 @@ export const UserPermissions = [
 // index == permission bit; only the management UI hides them so admins are not
 // offered toggles for capabilities that do nothing.
 export const HiddenPermissions = [
+  "see_hides",
   "offline_download",
   "rename",
   "move",

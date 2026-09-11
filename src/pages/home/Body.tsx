@@ -17,13 +17,10 @@ export const Body = () => {
         w="$full"
         gap="$4"
       >
-        <Readme files={["header.md", "top.md", "index.md"]} fromMeta="header" />
+        <Readme files={["header.md", "top.md", "index.md"]} toc={false} />
         <Nav />
         <Obj />
-        <Readme
-          files={["readme.md", "footer.md", "bottom.md"]}
-          fromMeta="readme"
-        />
+        <Readme files={["readme.md", "footer.md", "bottom.md"]} toc={true} />
         <Sidebar />
       </VStack>
     </Container>

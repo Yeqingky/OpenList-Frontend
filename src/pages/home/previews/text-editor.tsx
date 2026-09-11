@@ -95,14 +95,7 @@ function Editor(props: { data?: string | ArrayBuffer; contentType?: string }) {
     return lang?.aliases?.[0] || language()
   })
 
-  const canWrite = createMemo(
-    () =>
-      // objStore.write is only set from folder listing (FsListResp),
-      // not from file detail (FsGetResp). When directly entering a file,
-      // write is undefined, so fall back to permission check only.
-      (userCan("write_content") || objStore.write_content_bypass) &&
-      objStore.write !== false,
-  )
+  const canWrite = createMemo(() => userCan("write_content"))
 
   // Warn on in-app navigation when there are unsaved changes
   useBeforeLeave((e) => {

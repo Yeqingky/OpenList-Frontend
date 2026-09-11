@@ -3,7 +3,7 @@ import { Motion } from "solid-motionone"
 import { useContextMenu } from "solid-contextmenu"
 import { batch, Show } from "solid-js"
 import { CenterLoading, LinkWithPush, ImageWithError } from "~/components"
-import { usePath, useRouter, useUtil } from "~/hooks"
+import { usePath, useRouter } from "~/hooks"
 import { checkboxOpen, getMainColor, local, selectIndex } from "~/store"
 import { ObjType, StoreObj } from "~/types"
 import { bus, hoverColor } from "~/utils"
@@ -11,10 +11,6 @@ import { getIconByObj } from "~/utils/icon"
 import { ItemCheckbox, useSelectWithMouse } from "./helper"
 
 export const GridItem = (props: { obj: StoreObj; index: number }) => {
-  const { isHide } = useUtil()
-  if (isHide(props.obj)) {
-    return null
-  }
   const { setPathAs } = usePath()
   const objIcon = (
     <Icon

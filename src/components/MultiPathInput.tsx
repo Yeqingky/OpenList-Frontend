@@ -76,11 +76,7 @@ export const MultiPathInput = (props: MultiPathInputProps) => {
           <ModalCloseButton />
           <ModalHeader>{t("global.choose_or_input_path")}</ModalHeader>
           <ModalBody>
-            <EnhancedFolderTree
-              forceRoot
-              onChange={setSelectedPath}
-              showHiddenFolder={true}
-            />
+            <EnhancedFolderTree forceRoot onChange={setSelectedPath} />
           </ModalBody>
           <ModalFooter display="flex" gap="$2">
             <Button onClick={onClose} colorScheme="neutral">

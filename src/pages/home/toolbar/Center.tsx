@@ -51,20 +51,18 @@ export const Center = () => {
                 backdropFilter: "blur(8px)",
               }}
             >
-              <Show when={objStore.write}>
-                <For each={["delete"] as const}>
-                  {(name) => {
-                    return userCan(name) ? (
-                      <CenterIcon
-                        name={name}
-                        onClick={() => {
-                          bus.emit("tool", name)
-                        }}
-                      />
-                    ) : null
-                  }}
-                </For>
-              </Show>
+              <For each={["delete"] as const}>
+                {(name) => {
+                  return userCan(name) ? (
+                    <CenterIcon
+                      name={name}
+                      onClick={() => {
+                        bus.emit("tool", name)
+                      }}
+                    />
+                  ) : null
+                }}
+              </For>
               <CopyLink />
               <Download />
               <CenterIcon

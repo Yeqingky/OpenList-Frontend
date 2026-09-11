@@ -91,7 +91,6 @@ function SidebarPanel() {
       <FolderTree
         autoOpen
         showEmptyIcon
-        showHiddenFolder={false}
         onChange={(path) => to(path)}
         handle={(handler) => setFolderTreeHandler(handler)}
       />

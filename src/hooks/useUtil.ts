@@ -1,8 +1,7 @@
 import { createResource } from "solid-js"
-import { getHideFiles, objStore } from "~/store"
-import { Obj } from "~/types"
-import { decodeText, fetchText, notify, pathJoin } from "~/utils"
-import { useT, useLink, useRouter } from "."
+import { objStore } from "~/store"
+import { decodeText, fetchText, notify } from "~/utils"
+import { useT, useLink } from "."
 
 async function checkClipboardPermission(
   mode: "clipboard-read" | "clipboard-write",
@@ -21,7 +20,6 @@ async function checkClipboardPermission(
 
 export const useUtil = () => {
   const t = useT()
-  const { pathname } = useRouter()
   return {
     copy: async (text: string) => {
       let copied = false
@@ -63,24 +61,6 @@ export const useUtil = () => {
         notify.error(e.message || t("global.clipboard_denied"))
         return ""
       }
-    },
-    isHide: (obj: Obj) => {
-      const hideFiles = getHideFiles()
-      for (const reg of hideFiles) {
-        if (reg.test(pathJoin(pathname(), obj.name))) {
-          return true
-        }
-      }
-      return false
-    },
-    isHidePath: (path: string) => {
-      const hideFiles = getHideFiles()
-      for (const reg of hideFiles) {
-        if (reg.test(path)) {
-          return true
-        }
-      }
-      return false
     },
   }
 }

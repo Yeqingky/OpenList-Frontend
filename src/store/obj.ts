@@ -25,8 +25,6 @@ const initialObjStore = {
   objs: [] as StoreObj[],
   total: 0,
 
-  readme: "",
-  header: "",
   provider: "",
   direct_upload_tools: <string[] | undefined>undefined,
   state: State.Initial,
@@ -34,8 +32,7 @@ const initialObjStore = {
 }
 const [objStore, setObjStore] = createStore<
   typeof initialObjStore & {
-    write?: boolean
-    write_content_bypass?: boolean
+    mkdir?: boolean
   }
 >(initialObjStore)
 
@@ -63,22 +60,8 @@ export const ObjStore = {
   setTotal: (total: number) => {
     setObjStore("total", total)
   },
-  setReadme: (readme: string) => setObjStore("readme", readme),
-  setHeader: (header: string) => setObjStore("header", header),
   setRelated: (related: Obj[]) => setObjStore("related", related),
-  setWrite: (write: boolean) => setObjStore("write", write),
-  setWriteContentBypass: (write_content_bypass: boolean) =>
-    setObjStore("write_content_bypass", write_content_bypass),
-  // setGetResp: (resp: FsGetResp) => {
-  //   setObjStore("obj", resp.data);
-  //   setObjs(resp.data.related);
-  //   setObjStore("readme", resp.data.readme);
-  // },
-  // setListResp: (resp: FsListResp) => {
-  //   setObjs(resp.data.content);
-  //   setObjStore("readme", resp.data.readme);
-  //   setObjStore("write", resp.data.write);
-  // },
+  setMkdir: (mkdir: boolean) => setObjStore("mkdir", mkdir),
   setState: (state: State) => setObjStore("state", state),
   setDirectUploadTools: (tools?: string[]) =>
     setObjStore("direct_upload_tools", tools),

@@ -60,6 +60,10 @@ export const fsRemove = (dir: string, names: string[]): PEmptyResp => {
   return r.post("/fs/remove", { dir, names })
 }
 
+export const fsMkdir = (path: string): PEmptyResp => {
+  return r.post("/fs/mkdir", { path })
+}
+
 export const fetchText = async (
   url: string,
   ts = true,
